@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../../lib/layui-v2.5.5/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../css/public.css" media="all">
+</head>
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+
+        <fieldset class="table-search-fieldset">
+            <legend>搜索信息</legend>
+            <div style="margin: 10px 10px 10px 10px">
+                <form class="layui-form layui-form-pane" action="">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">用户姓名</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="username" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <button type="submit" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </fieldset>
+
+        <script type="text/html" id="toolbarDemo">
+            <div class="layui-btn-container">
+                <button class="layui-btn layui-btn-sm data-add-btn" lay-event="add"> 添加用户 </button>
+                <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="delete"> 删除用户 </button>
+            </div>
+        </script>
+
+        <table class="layui-hide" id="teacherTableId" lay-filter="teacherTableFilter"></table>
+
+        <script type="text/html" id="currentTableBar">
+            <a class="layui-btn layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
+            <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
+        </script>
+
+        <script type="text/html" id="teachingSituation">
+            <a class="layui-btn layui-btn-xs data-count-edit" lay-event="lookSituation">查看</a>
+        </script>
+
+        <script type="text/html" id="industryExperience">
+            <a class="layui-btn layui-btn-xs data-count-edit" lay-event="lookExperience">查看</a>
+        </script>
+
+    </div>
+</div>
+<script src="../../lib/layui-v2.5.5/layui.js" charset="utf-8"></script>
+<script src="../../js/common.js" charset="utf-8"></script>
+<script>
+
+    layui.use(['form', 'table', 'element'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            table = layui.table;
+
+        table.render({
+            elem: '#teacherTableId',
+            url: '/queryTeachers',
+            toolbar: '#toolbarDemo',
+            defaultToolbar: ['filter', 'exports', 'print', {
+                title: '提示',
+                layEvent: 'LAYTABLE_TIPS',
+                icon: 'layui-icon-tips'
+            }],
+            cols: [[
+                {type: "checkbox", width: 50, fixed: "left"},
+                {field: 'id', width: 80, title: 'ID', sort: true, hide: true},
+                {field: 'name', width: 80, title: '姓名'},
+                {field: 'sex', width: 80, title: '性别', sort: true},
+                {field: 'phoneNumber', width: 120, title: '联系方式'},
+                {field: 'address', width: 180, title: '家庭住址'},
+                {field: 'academicDegree', width: 120, title: '学位'},
+                {field: 'title', width: 120, title: '职称'},
+                {title: '授课情况', minwidth: 100, toolbar: '#teachingSituation', align: "center"},
+                {title: '行业经验', minwidth: 100, toolbar: '#industryExperience', fixed: "right", align: "center"},
+                {title: '操作', minwidth: 100, toolbar: '#currentTableBar', fixed: "right", align: "center"}
+            ]],
+            limits: [10, 15, 20, 25, 50, 100],
+            limit: 15,
+            page: true
+        });
+
+        // 监听搜索操作
+        form.on('submit(data-search-btn)', function (data) {
+            var result = JSON.stringify(data.field);
+            layer.alert(result, {
+                title: '最终的搜索信息'
+            });
+
+            //执行搜索重载
+            table.reload('teacherTableId', {
+                page: {
+                    curr: 1
+                }
+                , where: {
+                    searchParams: result
+                }
+            }, 'data');
+
+            return false;
+        });
+
+        //监听表格复选框选择
+        table.on('checkbox(teacherTableFilter)', function (obj) {
+            console.log(obj)
+        });
+
+        table.on('tool(teacherTableFilter)', function (obj) {
+            if (obj.event === 'edit') {
+                layer.open({
+                    title: '修改信息',
+                    type: 2,
+                    maxmin:true,
+                    shadeClose: true,
+                    area: ['80%', '80%'],
+                    content: url
+                });
+                return false;
+            } else if (obj.event === 'delete') {
+                layer.confirm('真的删除行么', function (index) {
+                    obj.del();
+                    layer.close(index);
+                });
+            } else if (obj.event === 'lookSituation') {  //查看教师授课情况
+                var id = obj.data.id;
+                var name = obj.data.name;
+                sessionStorage.setItem(TEACHER_ID, id);
+                var url = 'situation.html';
+                layer.open({
+                    title: '修改信息',
+                    type: 2,
+                    maxmin:true,
+                    shadeClose: true,
+                    area: ['80%', '80%'],
+                    content: url
+                });
+            } else if (obj.event === 'lookExperience') {  //查看教师行业实践经历
+                var id = obj.data.id;
+                var name = obj.data.name;
+                sessionStorage.setItem(TEACHER_ID, id);
+                var url = 'experience.html';
+                layer.open({
+                    title: '修改信息',
+                    type: 2,
+                    maxmin:true,
+                    shadeClose: true,
+                    area: ['80%', '80%'],
+                    content: url
+                });
+            }
+        });
+
+    });
+
+</script>
+
+</body>
+</html>

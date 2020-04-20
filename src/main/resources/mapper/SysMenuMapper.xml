@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sau.mapper.SysMenuMapper">
+	<resultMap id="sysMenu" type="SysMenu">
+		<id property="id" column="id" javaType="Long"/>
+		<result property="pid" column="pid" javaType="Long"/>
+		<result property="title" column="title" javaType="String"/>
+		<result property="icon" column="icon" javaType="String"/>
+		<result property="href" column="href" javaType="String"/>
+		<result property="target" column="target" javaType="String"/>
+		<result property="sort" column="sort" javaType="Integer"/>
+		<result property="status" column="status" javaType="Boolean"/>
+		<result property="remark" column="remark" javaType="String"/>
+		<result property="createAt" column="create_at" javaType="java.sql.Timestamp"/>
+		<result property="updateAt" column="update_at" javaType="java.sql.Timestamp"/>
+		<result property="deleteAt" column="delete_at" javaType="java.sql.Timestamp"/>
+	</resultMap>
+    <select id="findAllByStatusOrderBySort" resultMap="sysMenu">
+		SELECT id, pid, title,
+			   icon, href, target, sort, status, remark,
+		       create_at, update_at, delete_at
+		FROM system_menu
+	</select>
+</mapper>

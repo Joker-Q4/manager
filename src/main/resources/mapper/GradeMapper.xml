@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sau.mapper.GradeMapper">
+    <resultMap id="grade" type="Grade">
+        <id property="id" column="id" javaType="Integer"/>
+        <result property="combinedLanguage" column="combined_language" javaType="Double"/>
+        <result property="combinedLanguagePlus" column="combined_language_plus" javaType="Double"/>
+        <result property="advancedMathematics" column="advanced_mathematics" javaType="Double"/>
+        <result property="english" column="english" javaType="Double"/>
+        <result property="dataStructure" column="data_structure" javaType="Double"/>
+        <result property="java" column="java" javaType="Double"/>
+        <result property="computerPrinciples" column="computer_principles" javaType="Double"/>
+        <result property="computerNetwork" column="computer_network" javaType="Double"/>
+        <result property="oracle" column="oracle" javaType="Double"/>
+        <result property="web" column="web" javaType="Double"/>
+        <result property="teacherId" column="teacher_id" javaType="Integer"/>
+    </resultMap>
+    <select id="findGradeByStudentId" resultMap="grade">
+        SELECT *
+        FROM grade
+        where id = #{studentId}
+    </select>
+    <update id="updateGrade" parameterType="com.sau.entity.Grade">
+        update grade
+        set
+        <trim suffixOverrides="," >
+            <if test="combinedLanguage != null">
+                combined_language=#{combinedLanguage},
+            </if>
+            <if test="combinedLanguagePlus != null">
+                combined_language_plus=#{combinedLanguagePlus},
+            </if>
+            <if test="advancedMathematics != null">
+                advanced_mathematics=#{advancedMathematics},
+            </if>
+            <if test="english != null">
+                english=#{english},
+            </if>
+            <if test="dataStructure != null">
+                data_structure=#{dataStructure},
+            </if>
+            <if test="java != null">
+                java=#{java},
+            </if>
+            <if test="computerPrinciples != null">
+                computer_principles=#{computerPrinciples},
+            </if>
+            <if test="computerNetwork != null">
+                computer_network=#{computerNetwork},
+            </if>
+            <if test="oracle != null">
+                oracle=#{oracle},
+            </if>
+            <if test="web != null">
+                web=#{web},
+            </if>
+        </trim>
+        where id=#{id}
+    </update>
+</mapper>

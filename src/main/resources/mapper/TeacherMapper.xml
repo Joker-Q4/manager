@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sau.mapper.TeacherMapper">
+    <resultMap id="teacher" type="Teacher">
+        <id property="id" column="id" javaType="Integer"/>
+        <result property="name" column="name" javaType="String"/>
+        <result property="sex" column="sex" javaType="String"/>
+        <result property="phoneNumber" column="phone_number" javaType="String"/>
+        <result property="address" column="address" javaType="String"/>
+        <result property="academicDegree" column="academic_degree" javaType="String"/>
+        <result property="title" column="title" javaType="String"/>
+    </resultMap>
+    <select id="findAllTeacher" resultMap="teacher">
+        SELECT *
+        FROM teacher
+    </select>
+    <select id="findTeacherById" resultMap="teacher">
+        SELECT id, name, sex,
+               phone_number, address, academic_degree,
+               academic_degree, title
+        FROM teacher
+        where id = #{id}
+    </select>
+</mapper>

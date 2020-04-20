@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sau.mapper.PrizeMapper">
+    <resultMap id="prize" type="Prize">
+        <id property="id" column="id" javaType="Integer"/>
+        <result property="name" column="name" javaType="String"/>
+        <result property="description" column="description" javaType="String"/>
+        <result property="createTime" column="create_time" javaType="java.sql.Timestamp"/>
+        <result property="studentId" column="student_id" javaType="Integer"/>
+    </resultMap>
+    <select id="findPrizeByStudentId" resultMap="prize">
+        SELECT *
+        FROM prize
+        where id = #{studentId}
+    </select>
+
+    <update id="updatePrize" parameterType="com.sau.entity.Prize">
+        update prize
+        set
+        <trim suffixOverrides="," >
+            <if test="name != null">
+                name=#{name},
+            </if>
+            <if test="description != null">
+                description=#{description},
+            </if>
+            <if test="createTime != null">
+                create_time=#{createTime},
+            </if>
+        </trim>
+        where id=#{id}
+    </update>
+</mapper>

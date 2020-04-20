@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../../lib/layui-v2.5.5/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../css/public.css" media="all">
+</head>
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+
+        <fieldset class="table-search-fieldset">
+            <legend>搜索信息</legend>
+            <div style="margin: 10px 10px 10px 10px">
+                <form class="layui-form layui-form-pane" action="">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">用户姓名</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="username" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <button type="submit" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </fieldset>
+
+        <script type="text/html" id="toolbarSituation">
+            <div class="layui-btn-container">
+                <button class="layui-btn layui-btn-sm data-add-btn" lay-event="edit"> 修改成绩 </button>
+            </div>
+        </script>
+
+        <table class="layui-hide" id="GradeTable" lay-filter="GradeTableFilter"></table>
+
+    </div>
+</div>
+<script src="../../lib/layui-v2.5.5/layui.js" charset="utf-8"></script>
+<script src="../../js/common.js" charset="utf-8"></script>
+<script>
+    layui.use(['form', 'table', 'element'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            table = layui.table;
+
+        var studentId = sessionStorage.getItem(STUDENT_ID);
+
+        table.render({
+            elem: '#GradeTable',
+            url: '/grade/getGradeByStudentId?studentId='+studentId,
+            toolbar: '#toolbarSituation',
+            defaultToolbar: ['filter', 'exports', 'print', {
+                title: '提示',
+                layEvent: 'LAYTABLE_TIPS',
+                icon: 'layui-icon-tips'
+            }],
+            cols: [[
+                // {type: "radio", width: 50, fixed: "left"},
+                {field: 'id', width: 80, title: 'ID', hide: true},
+                {field: 'combinedLanguage', width: 80, title: 'C语言', edit: true},
+                {field: 'combinedLanguagePlus', width: 80, title: 'C++', edit: true},
+                {field: 'advancedMathematics', width: 80, title: '高等数学', edit: true},
+                {field: 'english', width: 80, title: '英语', edit: true},
+                {field: 'dataStructure', width: 120, title: '数据结构', edit: true},
+                {field: 'java', width: 100, title: 'Java语言程序设计', edit: true},
+                {field: 'computerPrinciples', width: 150, title: '计算机组成原理', edit: true},
+                {field: 'computerNetwork', width: 150, title: '计算机网络原理', edit: true},
+                {field: 'oracle', width: 120, title: 'Oracle数据库', edit: true},
+                {field: 'web', width: 150, title: 'Web应用程序设计', edit: true}
+            ]],
+            limits: [10, 15, 20, 25, 50, 100],
+            limit: 15,
+            page: false
+        });
+
+        // 监听搜索操作
+        form.on('submit(data-search-btn)', function (data) {
+            var result = JSON.stringify(data.field);
+            layer.alert(result, {
+                title: '最终的搜索信息'
+            });
+            //执行搜索重载
+            table.reload('GradeTable', {
+                page: {
+                    curr: 1
+                }
+                , where: {
+                    searchParams: result
+                }
+            }, 'data');
+            return false;
+        });
+
+        table.on('edit(GradeTableFilter)', function(obj){ //注：edit是固定事件名，test是table原始容器的属性 lay-filter="对应的值"
+            console.log(obj.value); //得到修改后的值
+            console.log(obj.field); //当前编辑的字段名
+            console.log(obj.data);  //所在行的所有相关数据
+            var requestData = {};
+            requestData.id = parseInt(obj.data.id);
+            requestData[obj.field] = obj.value;
+            request(requestData);
+        });
+
+        table.on('toolbar(GradeTableFilter)', function (obj) {
+            if (obj.event === 'edit') {   // 监听添加操作
+                sessionStorage.setItem(TYPE, TYPE_EDIT);
+                sessionStorage.setItem(DATA, JSON.stringify(obj.data));
+                var url = 'pages/student/grade_edit.html';
+                layer.open({
+                    title: '修改信息',
+                    type: 2,
+                    maxmin:true,
+                    shadeClose: true,
+                    area: ['80%', '80%'],
+                    content: url
+                });
+            }
+        });
+
+        function request(requestData) {
+            $.ajax({
+                type: 'POST',
+                dataType:'json',
+                url: URL_ROOT + 'grade/updateGrade',
+                data: {
+                    json: JSON.stringify(requestData)
+                },
+                success: function (data) {
+                    console.log(data);
+                    if (data.successful === true) {
+                        layer.msg(data.msg);
+                    } else {
+                        layer.msg(data.msg);
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    layer.msg("请求失败");
+                }
+            });
+        }
+    });
+</script>
+
+</body>
+</html>
