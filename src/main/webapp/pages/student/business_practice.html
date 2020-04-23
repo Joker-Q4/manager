@@ -34,34 +34,33 @@
 
         <script type="text/html" id="toolbarSituation">
             <div class="layui-btn-container">
-                <button class="layui-btn layui-btn-sm data-add-btn" lay-event="add"> 添加用户 </button>
-                <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="delete"> 删除用户 </button>
+                <button class="layui-btn layui-btn-sm data-add-btn" lay-event="add"> 添加企业实践经历 </button>
+                <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="delete"> 删除 </button>
             </div>
         </script>
 
         <table class="layui-hide" id="BusinessPracticeTable" lay-filter="BusinessPracticeTableFilter"></table>
 
-        <script type="text/html" id="currentTableBar">
-            <a class="layui-btn layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
-            <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
-        </script>
-
     </div>
 </div>
 <script src="../../lib/layui-v2.5.5/layui.js" charset="utf-8"></script>
+<script src="../../lib/jquery-3.4.1/jquery-3.4.1.min.js" charset="utf-8"></script>
 <script src="../../js/common.js" charset="utf-8"></script>
 <script>
 
+    var global_table;
     layui.use(['form', 'table', 'element'], function () {
         var $ = layui.jquery,
             form = layui.form,
             table = layui.table;
 
+        global_table = table;
+
         var studentId = sessionStorage.getItem(STUDENT_ID);
 
         table.render({
             elem: '#BusinessPracticeTable',
-            url: '/getPracticeByStudentId?studentId='+studentId,
+            url: '/businessPractice/getPracticeByStudentId?studentId='+studentId,
             toolbar: '#toolbarSituation',
             defaultToolbar: ['filter', 'exports', 'print', {
                 title: '提示',
@@ -71,10 +70,9 @@
             cols: [[
                 {type: "checkbox", width: 50, fixed: "left"},
                 {field: 'id', width: 80, title: 'ID', sort: true},
-                {field: 'name', width: 80, title: '公司名称'},
-                {field: 'description', width: 80, title: '详细描述', sort: true},
-                {field: 'createTime', width: 120, title: '创建时间'},
-                {title: '操作', minwidth: 100, toolbar: '#currentTableBar', fixed: "right", align: "center"}
+                {field: 'name', width: 150, title: '公司名称', edit: true},
+                {field: 'description', width: 200, title: '详细描述', edit: true},
+                {field: 'createTime', width: 120, title: '创建时间'}
             ]],
             limits: [10, 15, 20, 25, 50, 100],
             limit: 15,
@@ -101,53 +99,61 @@
             return false;
         });
 
+        table.on('edit(BusinessPracticeTableFilter)', function(obj){ //注：edit是固定事件名，test是table原始容器的属性 lay-filter="对应的值"
+            console.log(obj.value); //得到修改后的值
+            console.log(obj.field); //当前编辑的字段名
+            console.log(obj.data);  //所在行的所有相关数据
+            var url = URL_ROOT + 'businessPractice/updatePractice';
+            var requestData = {};
+            requestData.id = parseInt(obj.data.id);
+            requestData[obj.field] = obj.value;
+            request(url, requestData);
+        });
+
         /**
          * toolbar事件监听
          */
         table.on('toolbar(BusinessPracticeTableFilter)', function (obj) {
             if (obj.event === 'add') {   // 监听添加操作
+                sessionStorage.setItem(STUDENT_ID, studentId);
+                var url = 'business_practice_add.html';
                 layer.open({
-                    title: '修改信息',
+                    title: '奖项录入',
                     type: 2,
                     maxmin:true,
                     shadeClose: true,
                     area: ['80%', '80%'],
                     content: url
                 });
-            } else if (obj.event === 'delete') {  // 监听删除操作
+            } else if (obj.event === 'delete') {
                 var checkStatus = table.checkStatus('BusinessPracticeTable')
                     , data = checkStatus.data;
-                layer.alert(JSON.stringify(data));
-            }
-        });
-
-        //监听表格复选框选择
-        table.on('checkbox(BusinessPracticeTableFilter)', function (obj) {
-            console.log(obj)
-        });
-
-        table.on('tool(BusinessPracticeTableFilter)', function (obj) {
-            var data = obj.data;
-            if (obj.event === 'edit') {
-                layer.open({
-                    title: '修改信息',
-                    type: 2,
-                    maxmin:true,
-                    shadeClose: true,
-                    area: ['80%', '80%'],
-                    content: url
-                });
-                return false;
-            } else if (obj.event === 'delete') {
-                layer.confirm('真的删除行么', function (index) {
-                    obj.del();
+                if(data.length === 0){
+                    layer.alert("请先选中数据！");
+                    return;
+                }
+                layer.confirm('真的要删除吗?', function (index) {
+                    var temp = [];
+                    data.forEach(function (a) {
+                        temp.push(a.id);
+                    });
+                    var aa ={};
+                    aa.ids = temp;
+                    var url = URL_ROOT + 'businessPractice/deletePractice';
+                    deleteObjects(url, aa);
                     layer.close(index);
                 });
             }
         });
-
     });
 
+    function reloadTable() {
+        global_table.reload('BusinessPracticeTable', {
+            page: {
+                curr: 1
+            }
+        }, 'data');
+    }
 </script>
 
 </body>

@@ -34,7 +34,7 @@
 
         <script type="text/html" id="toolbarSituation">
             <div class="layui-btn-container">
-                <button class="layui-btn layui-btn-sm data-add-btn" lay-event="edit"> 修改成绩 </button>
+                <button class="layui-btn layui-btn-sm data-add-btn" lay-event="add"> 添加成绩 </button>
             </div>
         </script>
 
@@ -43,12 +43,16 @@
     </div>
 </div>
 <script src="../../lib/layui-v2.5.5/layui.js" charset="utf-8"></script>
+<script src="../../lib/jquery-3.4.1/jquery-3.4.1.min.js" charset="utf-8"></script>
 <script src="../../js/common.js" charset="utf-8"></script>
 <script>
+    var global_table;
     layui.use(['form', 'table', 'element'], function () {
         var $ = layui.jquery,
             form = layui.form,
             table = layui.table;
+
+        global_table = table;
 
         var studentId = sessionStorage.getItem(STUDENT_ID);
 
@@ -73,7 +77,8 @@
                 {field: 'computerPrinciples', width: 150, title: '计算机组成原理', edit: true},
                 {field: 'computerNetwork', width: 150, title: '计算机网络原理', edit: true},
                 {field: 'oracle', width: 120, title: 'Oracle数据库', edit: true},
-                {field: 'web', width: 150, title: 'Web应用程序设计', edit: true}
+                {field: 'web', width: 150, title: 'Web应用程序设计', edit: true},
+                {field: 'studentId', width: 150, title: '学生id', hide: true}
             ]],
             limits: [10, 15, 20, 25, 50, 100],
             limit: 15,
@@ -102,19 +107,23 @@
             console.log(obj.value); //得到修改后的值
             console.log(obj.field); //当前编辑的字段名
             console.log(obj.data);  //所在行的所有相关数据
+            var url = URL_ROOT + 'grade/updateGrade';
             var requestData = {};
             requestData.id = parseInt(obj.data.id);
             requestData[obj.field] = obj.value;
-            request(requestData);
+            request(url, requestData);
         });
 
         table.on('toolbar(GradeTableFilter)', function (obj) {
-            if (obj.event === 'edit') {   // 监听添加操作
-                sessionStorage.setItem(TYPE, TYPE_EDIT);
-                sessionStorage.setItem(DATA, JSON.stringify(obj.data));
-                var url = 'pages/student/grade_edit.html';
+            if(table["cache"]["GradeTable"].length !== 0){
+                layer.msg("已有成绩，请勿重复添加");
+                return;
+            }
+            if (obj.event === 'add') {   // 监听添加操作
+                sessionStorage.setItem(STUDENT_ID, studentId);
+                var url = 'grade_add.html';
                 layer.open({
-                    title: '修改信息',
+                    title: '成绩录入',
                     type: 2,
                     maxmin:true,
                     shadeClose: true,
@@ -123,29 +132,15 @@
                 });
             }
         });
-
-        function request(requestData) {
-            $.ajax({
-                type: 'POST',
-                dataType:'json',
-                url: URL_ROOT + 'grade/updateGrade',
-                data: {
-                    json: JSON.stringify(requestData)
-                },
-                success: function (data) {
-                    console.log(data);
-                    if (data.successful === true) {
-                        layer.msg(data.msg);
-                    } else {
-                        layer.msg(data.msg);
-                    }
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    layer.msg("请求失败");
-                }
-            });
-        }
     });
+
+    function reloadTable() {
+        global_table.reload('GradeTable', {
+            page: {
+                curr: 1
+            }
+        }, 'data');
+    }
 </script>
 
 </body>

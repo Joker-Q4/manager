@@ -7,10 +7,7 @@ import com.sau.global.Global;
 import com.sau.global.GlobalKey;
 import com.sau.global.JsonTools;
 import com.sau.service.PrizeService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +17,7 @@ import java.util.Map;
 import java.util.Properties;
 
 @RestController
+@RequestMapping("/prize")
 public class PrizeController {
 
     @Resource
@@ -34,8 +32,8 @@ public class PrizeController {
         return JsonTools.toResult(0, "success", list.size(), list);
     }
 
-    @PostMapping("/updateGrade")
-    public Map<String, Object> updateGrade(
+    @PostMapping("/updatePrize")
+    public Map<String, Object> updatePrize(
             HttpServletRequest request
     ) throws UnsupportedEncodingException {
         final Properties properties = Global.getRequest(request);
@@ -46,6 +44,29 @@ public class PrizeController {
         if(prizeService.updatePrize(prize))
             return JsonTools.toResult(0, "修改成功", 0, null);
         return JsonTools.toResult(1, "修改失败", 0, null);
+    }
+
+    @PostMapping("/deletePrize")
+    public Map<String, Object> deletePrize(
+            HttpServletRequest request
+    ) throws UnsupportedEncodingException {
+        final Properties properties = Global.getRequest(request);
+        String[] idArr = CommonController.delete(properties);
+        if(prizeService.deletePrizes(Global.stringFormatInteger(idArr))){
+            return JsonTools.toResult(0, "删除成功", 0, null);
+        }
+        return JsonTools.toResult(1, "删除失败", 0, null);
+    }
+
+    @PostMapping("/addPrize")
+    public Map<String, Object> addPrize(
+            HttpServletRequest request
+    ) throws UnsupportedEncodingException {
+        final Properties properties = Global.getRequest(request);
+        Prize prize = analyzeJson(properties);
+        if(prizeService.addPrize(prize))
+            return JsonTools.toResult(0, "添加成功", 0, null);
+        return JsonTools.toResult(1, "添加失败", 0, null);
     }
 
     private Prize analyzeJson(Properties properties){
@@ -61,12 +82,16 @@ public class PrizeController {
             prize.setId(Integer.parseInt(id));
         }
         final String name = jsonObject.getString(GlobalKey.NAME);
-        if(id != null && !id.isEmpty()){
+        if(name != null && !name.isEmpty()){
             prize.setName(name);
         }
         final String description = jsonObject.getString(GlobalKey.DESCRIPTION);
-        if(id != null && !id.isEmpty()){
+        if(description != null && !description.isEmpty()){
             prize.setDescription(description);
+        }
+        final String studentId = jsonObject.getString(GlobalKey.STUDENT_ID);
+        if(studentId != null && !studentId.isEmpty()){
+            prize.setStudentId(Integer.parseInt(studentId));
         }
         return prize;
     }

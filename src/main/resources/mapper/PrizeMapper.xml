@@ -14,7 +14,7 @@
     <select id="findPrizeByStudentId" resultMap="prize">
         SELECT *
         FROM prize
-        where id = #{studentId}
+        where student_id = #{studentId}
     </select>
 
     <update id="updatePrize" parameterType="com.sau.entity.Prize">
@@ -33,4 +33,17 @@
         </trim>
         where id=#{id}
     </update>
+    <insert id="insertPrize" useGeneratedKeys="true" keyProperty="id"
+            keyColumn="id" parameterType="com.sau.entity.Prize">
+        INSERT INTO
+            prize(name, description, create_time, student_id)
+        VALUES
+        (#{name},#{description},#{createTime},#{studentId})
+    </insert>
+    <delete id="deletePrizeById">
+        DELETE FROM
+            prize
+        WHERE
+            id = #{id}
+    </delete>
 </mapper>

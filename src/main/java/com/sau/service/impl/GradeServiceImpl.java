@@ -23,4 +23,9 @@ public class GradeServiceImpl implements GradeService {
     public boolean updateGrade(Grade grade) {
         return gradeMapper.updateGrade(grade) > 0;
     }
+
+    @Override
+    public boolean addGrade(Grade grade) {
+        return gradeMapper.insertGrade(grade) > 0;
+    }
 }

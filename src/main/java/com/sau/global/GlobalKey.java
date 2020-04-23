@@ -52,6 +52,7 @@ public class GlobalKey {
 
     public static String ID = "id";                        //主键
     public static String NAME = "name";                    //姓名
+    public static String TITLE = "title";                  //姓名
     public static String SEX = "sex";                      //性别
     public static String PHONE = "phone";                  //联系方式
     public static String ADDRESS = "address";              //家庭住址
@@ -68,6 +69,7 @@ public class GlobalKey {
     public static String COMPUTER_NETWORK = "computerNetwork";              //计算机网络
     public static String ORACLE = "oracle";                                 //oracle
     public static String WEB = "web";                                       //web
+    public static String STUDENT_ID = "studentId";                          //当前学生
 
     public static List<String> getGradeString(){
         List<String> list = new ArrayList<>();

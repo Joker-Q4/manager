@@ -44,14 +44,11 @@ public class StudentController {
             HttpServletRequest request
     ) throws UnsupportedEncodingException {
         final Properties properties = Global.getRequest(request);
-        final String json = properties.getProperty("json");
-        JSONObject jsonObject = JSONObject.parseObject(json);
-        String ids = jsonObject.getString(GlobalKey.IDS).replace("[", "").replace("]", "");
-        String[] idArr = ids.split(",");
+        String[] idArr = CommonController.delete(properties);
         if(studentService.deleteStudents(Global.stringFormatInteger(idArr))){
-            return JsonTools.toResult(0, "success", 0, null);
+            return JsonTools.toResult(0, "删除成功", 0, null);
         }
-        return JsonTools.toResult(1, "fail", 0, null);
+        return JsonTools.toResult(1, "删除失败", 0, null);
     }
 
     @GetMapping("/deleteStudent")

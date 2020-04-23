@@ -9,5 +9,7 @@ import java.util.List;
 public interface PrizeMapper {
 
     List<Prize> findPrizeByStudentId(Integer studentId);
-    int updatePrize(Prize prize);
+    Integer updatePrize(Prize prize);
+    Integer insertPrize(Prize prize);
+    Integer deletePrizeById(Integer id);
 }

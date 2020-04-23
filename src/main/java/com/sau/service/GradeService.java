@@ -8,4 +8,5 @@ public interface GradeService {
 
     List<Grade> getGradeByStudentId(Integer studentId);
     boolean updateGrade(Grade grade);
+    boolean addGrade(Grade grade);
 }

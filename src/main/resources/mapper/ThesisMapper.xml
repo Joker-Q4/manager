@@ -14,6 +14,32 @@
     <select id="findThesisByStudentId" resultMap="thesis">
         SELECT *
         FROM thesis
-        where id = #{studentId}
+        where student_id = #{studentId}
     </select>
+    <update id="updateThesis" parameterType="com.sau.entity.Thesis">
+        update thesis
+        set
+        <trim suffixOverrides="," >
+            <if test="title != null">
+                title=#{title},
+            </if>
+            <if test="description != null">
+                description=#{description},
+            </if>
+        </trim>
+        where id=#{id}
+    </update>
+    <insert id="insertThesis" useGeneratedKeys="true" keyProperty="id"
+            keyColumn="id" parameterType="com.sau.entity.Thesis">
+        INSERT INTO
+            thesis(title, description, create_time, student_id)
+        VALUES
+            (#{title},#{description},#{createTime},#{studentId})
+    </insert>
+    <delete id="deleteThesis">
+        DELETE FROM
+            thesis
+        WHERE
+            id = #{id}
+    </delete>
 </mapper>

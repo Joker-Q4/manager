@@ -10,7 +10,7 @@ public interface StudentMapper {
 
     List<Student> findAllStudents();
     Student findStudentById(Integer studentId);
-    Integer deleteStudentById(Integer studentId);
+    Integer deleteStudentById(Integer id);
     Integer updateStudentById(Student student);
     Integer insertStudentById(Student student);
 }

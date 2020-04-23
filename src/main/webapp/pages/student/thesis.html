@@ -34,34 +34,32 @@
 
         <script type="text/html" id="toolbarSituation">
             <div class="layui-btn-container">
-                <button class="layui-btn layui-btn-sm data-add-btn" lay-event="add"> 添加用户 </button>
-                <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="delete"> 删除用户 </button>
+                <button class="layui-btn layui-btn-sm data-add-btn" lay-event="add"> 添加论文 </button>
+                <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="delete"> 删除 </button>
             </div>
         </script>
 
         <table class="layui-hide" id="ThesisTable" lay-filter="ThesisTableFilter"></table>
 
-        <script type="text/html" id="currentTableBar">
-            <a class="layui-btn layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
-            <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
-        </script>
-
     </div>
 </div>
 <script src="../../lib/layui-v2.5.5/layui.js" charset="utf-8"></script>
+<script src="../../lib/jquery-3.4.1/jquery-3.4.1.min.js" charset="utf-8"></script>
 <script src="../../js/common.js" charset="utf-8"></script>
 <script>
 
+    var global_table;
     layui.use(['form', 'table', 'element'], function () {
         var $ = layui.jquery,
             form = layui.form,
             table = layui.table;
 
+        global_table = table;
         var studentId = sessionStorage.getItem(STUDENT_ID);
 
         table.render({
             elem: '#ThesisTable',
-            url: '/getThesisByStudentId?studentId='+studentId,
+            url: '/thesis/getThesisByStudentId?studentId='+studentId,
             toolbar: '#toolbarSituation',
             defaultToolbar: ['filter', 'exports', 'print', {
                 title: '提示',
@@ -71,10 +69,9 @@
             cols: [[
                 {type: "checkbox", width: 50, fixed: "left"},
                 {field: 'id', width: 80, title: 'ID', sort: true},
-                {field: 'title', width: 80, title: '论文题目'},
-                {field: 'description', width: 80, title: '详细描述', sort: true},
-                {field: 'createTime', width: 120, title: '创建时间'},
-                {title: '操作', minwidth: 100, toolbar: '#currentTableBar', fixed: "right", align: "center"}
+                {field: 'title', width: 180, title: '论文题目', edit: true},
+                {field: 'description', width: 200, title: '详细描述', edit: true},
+                {field: 'createTime', width: 120, title: '创建时间'}
             ]],
             limits: [10, 15, 20, 25, 50, 100],
             limit: 15,
@@ -101,32 +98,48 @@
             return false;
         });
 
-        /**
-         * toolbar事件监听
-         */
         table.on('toolbar(ThesisTableFilter)', function (obj) {
             if (obj.event === 'add') {   // 监听添加操作
-                var content = miniPage.getHrefContent('page/table/add.html');
-                var openWH = miniPage.getOpenWidthHeight();
-
+                sessionStorage.setItem(STUDENT_ID, studentId);
+                var url = 'thesis_add.html';
                 layer.open({
-                    title: '修改信息',
+                    title: '论文录入',
                     type: 2,
                     maxmin:true,
                     shadeClose: true,
                     area: ['80%', '80%'],
                     content: url
                 });
-            } else if (obj.event === 'delete') {  // 监听删除操作
+            } else if (obj.event === 'delete') {
                 var checkStatus = table.checkStatus('ThesisTable')
                     , data = checkStatus.data;
-                layer.alert(JSON.stringify(data));
+                if(data.length === 0){
+                    layer.alert("请先选中数据！");
+                    return;
+                }
+                layer.confirm('真的要删除吗?', function (index) {
+                    var temp = [];
+                    data.forEach(function (a) {
+                        temp.push(a.id);
+                    });
+                    var aa ={};
+                    aa.ids = temp;
+                    var url = URL_ROOT + 'thesis/deleteThesis';
+                    deleteObjects(url, aa);
+                    layer.close(index);
+                });
             }
         });
 
-        //监听表格复选框选择
-        table.on('checkbox(ThesisTableFilter)', function (obj) {
-            console.log(obj)
+        table.on('edit(ThesisTableFilter)', function(obj){ //注：edit是固定事件名，test是table原始容器的属性 lay-filter="对应的值"
+            console.log(obj.value); //得到修改后的值
+            console.log(obj.field); //当前编辑的字段名
+            console.log(obj.data);  //所在行的所有相关数据
+            var url = URL_ROOT + 'thesis/updateThesis';
+            var requestData = {};
+            requestData.id = parseInt(obj.data.id);
+            requestData[obj.field] = obj.value;
+            request(url, requestData);
         });
 
         table.on('tool(ThesisTableFilter)', function (obj) {
@@ -148,8 +161,15 @@
                 });
             }
         });
-
     });
+
+    function reloadTable() {
+        global_table.reload('ThesisTable', {
+            page: {
+                curr: 1
+            }
+        }, 'data');
+    }
 
 </script>
 

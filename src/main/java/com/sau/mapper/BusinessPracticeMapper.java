@@ -9,4 +9,7 @@ import java.util.List;
 public interface BusinessPracticeMapper {
 
     List<BusinessPractice> findPracticeByStudentId(Integer studentId);
+    Integer updatePractice(BusinessPractice businessPractice);
+    Integer insertPractice(BusinessPractice businessPractice);
+    Integer deletePracticeById(Integer id);
 }

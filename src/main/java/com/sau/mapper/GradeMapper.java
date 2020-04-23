@@ -10,4 +10,5 @@ public interface GradeMapper {
 
     List<Grade> findGradeByStudentId(Integer studentId);
     int updateGrade(Grade grade);
+    int insertGrade(Grade grade);
 }

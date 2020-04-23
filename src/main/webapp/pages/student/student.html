@@ -69,6 +69,7 @@
     </div>
 </div>
 <script src="../../lib/layui-v2.5.5/layui.js" charset="utf-8"></script>
+<script src="../../lib/jquery-3.4.1/jquery-3.4.1.min.js" charset="utf-8"></script>
 <script src="../../js/common.js" charset="utf-8"></script>
 <script>
     var global_table;
@@ -134,7 +135,7 @@
             if (obj.event === 'lookGrade') {
                 url = 'grade.html';
                 layer.open({
-                    title: name + '的成绩',
+                    title: '<font color="red">'+name+'</font>' + '&nbsp;的成绩',
                     type: 2,
                     shade: 0.2,
                     maxmin:true,
@@ -145,7 +146,7 @@
             } else if (obj.event === 'lookPrize') {
                 url = 'prize.html';
                 layer.open({
-                    title: name + '的获奖情况',
+                    title: '<font color="red">'+name+'</font>' + '&nbsp;的获奖情况',
                     type: 2,
                     shade: 0.2,
                     maxmin:true,
@@ -156,7 +157,7 @@
             } else if (obj.event === 'lookBusinessPractice') {
                 url = 'business_practice.html';
                 layer.open({
-                    title: name + '的企业实践活动',
+                    title: '<font color="red">'+name+'</font>' + '&nbsp;的企业实践活动',
                     type: 2,
                     shade: 0.2,
                     maxmin:true,
@@ -167,7 +168,7 @@
             } else if (obj.event === 'lookThesis') {
                 url = 'thesis.html';
                 layer.open({
-                    title: name + '的发表论文情况',
+                    title: '<font color="red">'+name+'</font>' + '&nbsp;的发表论文情况',
                     type: 2,
                     shade: 0.2,
                     maxmin:true,
@@ -190,7 +191,8 @@
                 });
             } else if (obj.event === 'delete') {
                 layer.confirm('真的要删除吗?', function (index) {
-                    deleteStudent(obj.data.id);
+                    var url = URL_ROOT + 'student/deleteStudent?studentId='+obj.data.id;
+                    deleteObject(url);
                     layer.close(index);
                 });
             }
@@ -223,7 +225,8 @@
                     });
                     var aa ={};
                     aa.ids = temp;
-                    deleteStudents(aa);
+                    var url = URL_ROOT + 'student/deleteStudents';
+                    deleteObjects(url, aa);
                     layer.close(index);
                 });
             }
@@ -239,11 +242,7 @@
                 },
                 success: function (data) {
                     layer.msg(data.msg);
-                    table.reload('studentTableId', {
-                        page: {
-                            curr: 1
-                        }
-                    }, 'data');
+                    reloadTable();
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     layer.msg("请求失败");
@@ -251,10 +250,10 @@
             });
         }
 
-        function deleteStudent(id) {
+        function deleteStudent(url) {
             $.ajax({
                 type: 'GET',
-                url: URL_ROOT + 'student/deleteStudent?studentId='+id,
+                url: url,
                 success: function (data) {
                     layer.msg(data.msg);
                     reloadTable();

@@ -45,6 +45,17 @@ public class GradeController {
         return JsonTools.toResult(1, "修改失败", 0, null);
     }
 
+    @PostMapping("/addGrade")
+    public Map<String, Object> addGrade(
+            HttpServletRequest request
+    ) throws UnsupportedEncodingException {
+        final Properties properties = Global.getRequest(request);
+        Grade grade = analyzeJson(properties);
+        if(gradeService.addGrade(grade))
+            return JsonTools.toResult(0, "添加成功", 0, null);
+        return JsonTools.toResult(1, "添加失败", 0, null);
+    }
+
     private Grade analyzeJson(Properties properties){
         final String json = properties.getProperty("json");
         JSONObject jsonObject = JSONObject.parseObject(json);
@@ -75,7 +86,7 @@ public class GradeController {
         }
         final String dataStructure = jsonObject.getString(GlobalKey.DATA_STRUCTURE);
         if(dataStructure != null && !dataStructure.isEmpty()){
-            grade.setCombinedLanguage(Double.parseDouble(dataStructure));
+            grade.setDataStructure(Double.parseDouble(dataStructure));
         }
         final String java = jsonObject.getString(GlobalKey.JAVA);
         if(java != null && !java.isEmpty()){
@@ -96,6 +107,10 @@ public class GradeController {
         final String web = jsonObject.getString(GlobalKey.WEB);
         if(web != null && !web.isEmpty()){
             grade.setWeb(Double.parseDouble(web));
+        }
+        final String studentId = jsonObject.getString(GlobalKey.STUDENT_ID);
+        if(studentId != null && !studentId.isEmpty()){
+            grade.setStudentId(Integer.parseInt(studentId));
         }
         return grade;
     }

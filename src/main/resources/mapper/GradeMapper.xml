@@ -21,7 +21,7 @@
     <select id="findGradeByStudentId" resultMap="grade">
         SELECT *
         FROM grade
-        where id = #{studentId}
+        where student_id = #{studentId}
     </select>
     <update id="updateGrade" parameterType="com.sau.entity.Grade">
         update grade
@@ -60,4 +60,15 @@
         </trim>
         where id=#{id}
     </update>
+    <insert id="insertGrade" useGeneratedKeys="true" keyProperty="id"
+            keyColumn="id" parameterType="com.sau.entity.Grade">
+        INSERT INTO
+            grade(combined_language, combined_language_plus, advanced_mathematics,
+                  english, data_structure, java, computer_principles,
+                  computer_network, oracle, web, student_id)
+        VALUES
+        (#{combinedLanguage},#{combinedLanguagePlus},#{advancedMathematics},
+         #{english},#{dataStructure},#{java},#{computerPrinciples},
+         #{computerNetwork},#{oracle},#{web},#{studentId})
+    </insert>
 </mapper>

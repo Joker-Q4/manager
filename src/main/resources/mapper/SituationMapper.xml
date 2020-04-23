@@ -21,6 +21,6 @@
     <select id="findSituationByTeacherId" resultMap="teachingSituation">
         SELECT *
         FROM teaching_situation
-        where id = #{teacherId}
+        where teacher_id = #{teacherId}
     </select>
 </mapper>

@@ -15,6 +15,6 @@
     <select id="findExperienceByTeacherId" resultMap="industryExperience">
         SELECT *
         FROM industry_experience
-        where id = #{teacherId}
+        where teacher_id = #{teacherId}
     </select>
 </mapper>

@@ -14,6 +14,32 @@
     <select id="findPracticeByStudentId" resultMap="businessPractice">
         SELECT *
         FROM business_practice
-        where id = #{studentId}
+        where student_id = #{studentId}
     </select>
+    <update id="updatePractice" parameterType="com.sau.entity.BusinessPractice">
+        update business_practice
+        set
+        <trim suffixOverrides="," >
+            <if test="name != null">
+                name=#{name},
+            </if>
+            <if test="description != null">
+                description=#{description},
+            </if>
+        </trim>
+        where id=#{id}
+    </update>
+    <insert id="insertPractice" useGeneratedKeys="true" keyProperty="id"
+            keyColumn="id" parameterType="com.sau.entity.BusinessPractice">
+        INSERT INTO
+            business_practice(name, description, create_time, student_id)
+        VALUES
+            (#{name},#{description},#{createTime},#{studentId})
+    </insert>
+    <delete id="deletePracticeById">
+        DELETE FROM
+            business_practice
+        WHERE
+            id = #{id}
+    </delete>
 </mapper>
