@@ -10,4 +10,7 @@ public interface TeacherMapper {
 
     List<Teacher> findAllTeacher();
     Teacher findTeacherById(Integer teacherId);
+    Integer deleteTeacherById(Integer id);
+    Integer updateTeacher(Teacher teacher);
+    Integer insertTeacher(Teacher teacher);
 }

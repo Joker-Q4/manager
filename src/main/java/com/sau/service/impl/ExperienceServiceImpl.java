@@ -18,4 +18,24 @@ public class ExperienceServiceImpl implements ExperienceService {
     public List<IndustryExperience> getExperienceByTeacherId(Integer teacherId) {
         return experienceMapper.findExperienceByTeacherId(teacherId);
     }
+
+    @Override
+    public boolean updateExperience(IndustryExperience industryExperience) {
+        return experienceMapper.updateExperience(industryExperience) > 0;
+    }
+
+    @Override
+    public boolean addExperience(IndustryExperience industryExperience) {
+        return experienceMapper.insertExperience(industryExperience) > 0;
+    }
+
+    @Override
+    public boolean deleteExperienceById(Integer[] ids) {
+        boolean flag = true;
+        for (Integer id : ids) {
+            flag = flag && experienceMapper.deleteExperienceById(id) > 0;
+        }
+        return flag;
+    }
+
 }

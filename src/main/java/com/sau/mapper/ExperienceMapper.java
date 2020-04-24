@@ -9,4 +9,7 @@ import java.util.List;
 public interface ExperienceMapper {
 
     List<IndustryExperience> findExperienceByTeacherId(Integer teacherId);
+    Integer updateExperience(IndustryExperience industryExperience);
+    Integer insertExperience(IndustryExperience industryExperience);
+    Integer deleteExperienceById(Integer id);
 }

@@ -57,7 +57,10 @@ public class GlobalKey {
     public static String PHONE = "phone";                  //联系方式
     public static String ADDRESS = "address";              //家庭住址
     public static String DESCRIPTION = "description";      //详细描述
+    public static String LOCATION = "location";            //实践地址
+    public static String TIME = "time";                    //活动时间
     public static String CREATE_TIME = "create_time";      //创建时间
+    public static String ACADEMIC_DEGREE = "academicDegree";      //学位
 
     public static String COMBINED_LANGUAGE = "combinedLanguage";            //C语言
     public static String COMBINED_LANGUAGE_PLUS = "combinedLanguagePlus";   //C++
@@ -70,6 +73,7 @@ public class GlobalKey {
     public static String ORACLE = "oracle";                                 //oracle
     public static String WEB = "web";                                       //web
     public static String STUDENT_ID = "studentId";                          //当前学生
+    public static String TEACHER_ID = "teacherId";                          //当前教师
 
     public static List<String> getGradeString(){
         List<String> list = new ArrayList<>();

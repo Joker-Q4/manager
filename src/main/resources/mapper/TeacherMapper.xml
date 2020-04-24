@@ -23,4 +23,42 @@
         FROM teacher
         where id = #{id}
     </select>
+    <delete id="deleteTeacherById">
+        DELETE FROM
+            teacher
+        WHERE
+            id = #{id}
+    </delete>
+    <update id="updateTeacher" parameterType="com.sau.entity.Teacher">
+        update teacher
+        set
+        <trim  suffixOverrides="," >
+            <if test="name != null and name != ''">
+                name=#{name},
+            </if>
+            <if test="sex != null">
+                sex=#{sex},
+            </if>
+            <if test="phoneNumber != null">
+                phone_number=#{phoneNumber},
+            </if>
+            <if test="address != null">
+                address=#{address},
+            </if>
+            <if test="academicDegree != null">
+                academic_degree=#{academicDegree},
+            </if>
+            <if test="title != null">
+                title=#{title},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+    <insert id="insertTeacher" useGeneratedKeys="true" keyProperty="id"
+            keyColumn="id" parameterType="com.sau.entity.Teacher">
+        INSERT INTO
+            teacher(name, sex, phone_number, address, academic_degree, title)
+        VALUES
+            (#{name},#{sex},#{phoneNumber},#{address},#{academicDegree},#{title})
+    </insert>
 </mapper>

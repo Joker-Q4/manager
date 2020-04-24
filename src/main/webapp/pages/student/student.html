@@ -191,7 +191,7 @@
                 });
             } else if (obj.event === 'delete') {
                 layer.confirm('真的要删除吗?', function (index) {
-                    var url = URL_ROOT + 'student/deleteStudent?studentId='+obj.data.id;
+                    var url = URL_ROOT + 'student/deleteStudent?id='+obj.data.id;
                     deleteObject(url);
                     layer.close(index);
                 });
@@ -231,38 +231,6 @@
                 });
             }
         });
-
-        function deleteStudents(arr) {
-            $.ajax({
-                type: 'POST',
-                dataType:'json',
-                url: URL_ROOT + 'student/deleteStudents',
-                data: {
-                    json: JSON.stringify(arr)
-                },
-                success: function (data) {
-                    layer.msg(data.msg);
-                    reloadTable();
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    layer.msg("请求失败");
-                }
-            });
-        }
-
-        function deleteStudent(url) {
-            $.ajax({
-                type: 'GET',
-                url: url,
-                success: function (data) {
-                    layer.msg(data.msg);
-                    reloadTable();
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    layer.msg("请求失败");
-                }
-            });
-        }
     });
 
     function reloadTable() {

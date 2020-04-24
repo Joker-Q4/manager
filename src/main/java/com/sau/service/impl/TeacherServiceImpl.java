@@ -23,4 +23,28 @@ public class TeacherServiceImpl implements TeacherService {
     public Teacher getTeacherById(Integer id) {
         return teacherMapper.findTeacherById(id);
     }
+
+    @Override
+    public boolean deleteTeacher(Integer id) {
+        return teacherMapper.deleteTeacherById(id) > 0;
+    }
+
+    @Override
+    public boolean deleteTeachers(Integer[] ids) {
+        boolean flag = true;
+        for (Integer id : ids) {
+            flag = flag && teacherMapper.deleteTeacherById(id) > 0;
+        }
+        return flag;
+    }
+
+    @Override
+    public boolean updateTeacher(Teacher teacher) {
+        return teacherMapper.updateTeacher(teacher) > 0;
+    }
+
+    @Override
+    public boolean addTeacher(Teacher teacher) {
+        return teacherMapper.insertTeacher(teacher) > 0;
+    }
 }

@@ -8,7 +8,7 @@
         <id property="id" column="id" javaType="Integer"/>
         <result property="title" column="title" javaType="String"/>
         <result property="description" column="description" javaType="String"/>
-        <result property="time" column="time" javaType="java.sql.Timestamp"/>
+        <result property="time" column="time" javaType="java.sql.Date"/>
         <result property="location" column="location" javaType="String"/>
         <result property="teacherId" column="teacher_id" javaType="Integer"/>
     </resultMap>
@@ -17,4 +17,36 @@
         FROM industry_experience
         where teacher_id = #{teacherId}
     </select>
+    <update id="updateExperience" parameterType="com.sau.entity.IndustryExperience">
+        update industry_experience
+        set
+        <trim suffixOverrides="," >
+            <if test="title != null">
+                title=#{title},
+            </if>
+            <if test="description != null">
+                description=#{description},
+            </if>
+            <if test="time != null">
+                time=#{time},
+            </if>
+            <if test="location != null">
+                location=#{location},
+            </if>
+        </trim>
+        where id=#{id}
+    </update>
+    <insert id="insertExperience" useGeneratedKeys="true" keyProperty="id"
+            keyColumn="id" parameterType="com.sau.entity.IndustryExperience">
+        INSERT INTO
+            industry_experience(title, description, time, location, teacher_id)
+        VALUES
+            (#{title},#{description},#{time},#{location},#{teacherId})
+    </insert>
+    <delete id="deleteExperienceById">
+        DELETE FROM
+            industry_experience
+        WHERE
+            id = #{id}
+    </delete>
 </mapper>

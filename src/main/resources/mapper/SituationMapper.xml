@@ -23,4 +23,56 @@
         FROM teaching_situation
         where teacher_id = #{teacherId}
     </select>
+    <update id="updateSituation" parameterType="com.sau.entity.TeachingSituation">
+        update teaching_situation
+        set
+        <trim suffixOverrides="," >
+            <if test="combinedLanguage != null">
+                combined_language=#{combinedLanguage},
+            </if>
+            <if test="combinedLanguagePlus != null">
+                combined_language_plus=#{combinedLanguagePlus},
+            </if>
+            <if test="advancedMathematics != null">
+                advanced_mathematics=#{advancedMathematics},
+            </if>
+            <if test="english != null">
+                english=#{english},
+            </if>
+            <if test="dataStructure != null">
+                data_structure=#{dataStructure},
+            </if>
+            <if test="java != null">
+                java=#{java},
+            </if>
+            <if test="computerPrinciples != null">
+                computer_principles=#{computerPrinciples},
+            </if>
+            <if test="computerNetwork != null">
+                computer_network=#{computerNetwork},
+            </if>
+            <if test="oracle != null">
+                oracle=#{oracle},
+            </if>
+            <if test="web != null">
+                web=#{web},
+            </if>
+        </trim>
+        where id=#{id}
+    </update>
+    <insert id="insertSituation" useGeneratedKeys="true" keyProperty="id"
+            keyColumn="id" parameterType="com.sau.entity.TeachingSituation">
+        INSERT INTO
+            teaching_situation(combined_language, combined_language_plus, advanced_mathematics, english, data_structure,
+                               java, computer_principles, computer_network, oracle, web, teacher_id)
+        VALUES
+            (#{combinedLanguage},#{combinedLanguagePlus},#{advancedMathematics},#{english},#{dataStructure},
+             #{java},#{computerPrinciples},#{computerNetwork},#{oracle},#{web},#{teacherId})
+    </insert>
+    <delete id="deleteSituationById">
+        DELETE FROM
+            teaching_situation
+        WHERE
+            id = #{id}
+    </delete>
 </mapper>

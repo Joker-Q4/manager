@@ -1,6 +1,6 @@
 package com.sau.entity;
 
-import java.sql.Timestamp;
+import java.util.Date;
 
 /**
  * 教师行业实践经历
@@ -10,7 +10,7 @@ public class IndustryExperience {
     private Integer id;
     private String title;           //标题
     private String description;     //实践描述
-    private Timestamp time;         //实践时间
+    private Date time;         //实践时间
     private String location;        //实践地点
     private Integer teacherId;      //实践教师
     private Teacher teacher;
@@ -39,11 +39,11 @@ public class IndustryExperience {
         this.description = description;
     }
 
-    public Timestamp getTime() {
+    public Date getTime() {
         return time;
     }
 
-    public void setTime(Timestamp time) {
+    public void setTime(Date time) {
         this.time = time;
     }
 

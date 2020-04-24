@@ -34,17 +34,15 @@
 
         <script type="text/html" id="toolbarSituation">
             <div class="layui-btn-container">
-                <button class="layui-btn layui-btn-sm data-add-btn" lay-event="add"> 添加用户 </button>
-                <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="delete"> 删除用户 </button>
+                <button class="layui-btn layui-btn-sm data-add-btn" lay-event="add"> 添加授课 </button>
             </div>
         </script>
 
-        <table class="layui-hide" id="SituationTable" lay-filter="situationTableFilter"></table>
-
         <script type="text/html" id="currentTableBar">
             <a class="layui-btn layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
-            <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
         </script>
+
+        <table class="layui-hide" id="SituationTable" lay-filter="situationTableFilter"></table>
 
     </div>
 </div>
@@ -53,16 +51,18 @@
 <script src="../../js/common.js" charset="utf-8"></script>
 <script>
 
+    var global_table;
     layui.use(['form', 'table', 'element'], function () {
         var $ = layui.jquery,
             form = layui.form,
             table = layui.table;
 
+        global_table = table;
         var teacherId = sessionStorage.getItem(TEACHER_ID);
 
         table.render({
             elem: '#SituationTable',
-            url: '/getSituationByTeacherId?teacherId='+teacherId,
+            url: '/situation/getSituationByTeacherId?teacherId='+teacherId,
             toolbar: '#toolbarSituation',
             defaultToolbar: ['filter', 'exports', 'print', {
                 title: '提示',
@@ -70,23 +70,21 @@
                 icon: 'layui-icon-tips'
             }],
             cols: [[
-                {type: "checkbox", width: 50, fixed: "left"},
-                {field: 'id', width: 80, title: 'ID', sort: true},
+            //    {type: "checkbox", width: 50, fixed: "left"},
+                {field: 'id', width: 80, title: 'ID', sort: true, hide: true},
                 {field: 'combinedLanguage', width: 80, title: 'C语言'},
                 {field: 'combinedLanguagePlus', width: 80, title: 'C++', sort: true},
                 {field: 'advancedMathematics', width: 120, title: '高等数学'},
-                {field: 'english', width: 180, title: '英语'},
+                {field: 'english', width: 120, title: '英语'},
                 {field: 'dataStructure', width: 120, title: '数据结构'},
                 {field: 'java', width: 120, title: 'Java语言程序设计'},
                 {field: 'computerPrinciples', width: 120, title: '计算机组成原理'},
                 {field: 'computerNetwork', width: 120, title: '计算机网络原理'},
                 {field: 'oracle', width: 120, title: 'Oracle数据库'},
                 {field: 'web', width: 120, title: 'Web应用程序设计'},
+                {field: 'teacherId', width: 120, title: '教师Id', hide: true},
                 {title: '操作', minwidth: 100, toolbar: '#currentTableBar', fixed: "right", align: "center"}
-            ]],
-            limits: [10, 15, 20, 25, 50, 100],
-            limit: 15,
-            page: true
+            ]]
         });
 
         // 监听搜索操作
@@ -109,52 +107,50 @@
             return false;
         });
 
-        /**
-         * toolbar事件监听
-         */
-        table.on('toolbar(situationTableFilter)', function (obj) {
-            if (obj.event === 'add') {   // 监听添加操作
-                layer.open({
-                    title: '修改信息',
-                    type: 2,
-                    maxmin:true,
-                    shadeClose: true,
-                    area: ['80%', '80%'],
-                    content: url
-                });
-            } else if (obj.event === 'delete') {  // 监听删除操作
-                var checkStatus = table.checkStatus('SituationTable')
-                    , data = checkStatus.data;
-                layer.alert(JSON.stringify(data));
-            }
-        });
-
-        //监听表格复选框选择
-        table.on('checkbox(situationTableFilter)', function (obj) {
-            console.log(obj)
-        });
-
         table.on('tool(situationTableFilter)', function (obj) {
-            var data = obj.data;
             if (obj.event === 'edit') {
+                sessionStorage.setItem(TYPE, TYPE_EDIT);
+                sessionStorage.setItem(DATA, JSON.stringify(obj.data));
+                var url = 'situation_add.html';
                 layer.open({
-                    title: '修改信息',
+                    title: '修改授课信息',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin:true,
+                    shadeClose: true,
+                    area: ['80%', '80%'],
+                    content: url
+                });
+            }
+        });
+
+        table.on('toolbar(situationTableFilter)', function (obj) {
+            if(table["cache"]["SituationTable"].length !== 0){
+                layer.msg("已有授课，请勿重复添加");
+                return;
+            }
+            if (obj.event === 'add') {   // 监听添加操作
+                sessionStorage.setItem(TEACHER_ID, teacherId);
+                var url = 'situation_add.html';
+                layer.open({
+                    title: '授课录入',
                     type: 2,
                     maxmin:true,
                     shadeClose: true,
                     area: ['80%', '80%'],
                     content: url
                 });
-                return false;
-            } else if (obj.event === 'delete') {
-                layer.confirm('真的删除行么', function (index) {
-                    obj.del();
-                    layer.close(index);
-                });
             }
         });
-
     });
+
+    function reloadTable() {
+        global_table.reload('SituationTable', {
+            page: {
+                curr: 1
+            }
+        }, 'data');
+    }
 
 </script>
 

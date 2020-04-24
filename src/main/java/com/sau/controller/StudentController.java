@@ -52,14 +52,14 @@ public class StudentController {
     }
 
     @GetMapping("/deleteStudent")
-    public Map<String, Object> deleteStudent(@RequestParam(defaultValue = "") String studentId){
-        if(studentId.isEmpty()){
-            return JsonTools.toResult(0, "studentId不能为空", 0, null);
+    public Map<String, Object> deleteStudent(@RequestParam(defaultValue = "") String id){
+        if(id.isEmpty()){
+            return JsonTools.toResult(0, "id不能为空", 0, null);
         }
-        if(studentService.deleteStudent(Integer.valueOf(studentId)))
-            return JsonTools.toResult(0, "success", 0, null);
+        if(studentService.deleteStudent(Integer.valueOf(id)))
+            return JsonTools.toResult(0, "删除成功", 0, null);
         else
-            return JsonTools.toResult(1, "fail", 0, null);
+            return JsonTools.toResult(1, "删除失败", 0, null);
     }
 
     @PostMapping("/updateStudent")

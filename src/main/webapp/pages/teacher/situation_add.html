@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../../lib/layui-v2.5.5/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../css/public.css" media="all">
+</head>
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+
+        <div class="layui-form layuimini-form" lay-filter="teacher_situation_add">
+            <div class="layui-form-item" style="display: none" id="id">
+                <label class="layui-form-label required">id</label>
+                <div class="layui-input-block">
+                    <input type="text" name="id"
+                           value="" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item" style="display: none" id="teacherId">
+                <label class="layui-form-label required">teacherId</label>
+                <div class="layui-input-block">
+                    <input type="text" name="teacherId"
+                           value="" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label required">C语言</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="combinedLanguage" value="0" title="没有" checked="">
+                    <input type="radio" name="combinedLanguage" value="1" title="有">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label required">C++</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="combinedLanguagePlus" value="0" title="没有" checked="">
+                    <input type="radio" name="combinedLanguagePlus" value="1" title="有">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label required">高等数学</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="advancedMathematics" value="0" title="没有" checked="">
+                    <input type="radio" name="advancedMathematics" value="1" title="有">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label required">英语</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="english" value="0" title="没有" checked="">
+                    <input type="radio" name="english" value="1" title="有">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label required">数据结构</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="dataStructure" value="0" title="没有" checked="">
+                    <input type="radio" name="dataStructure" value="1" title="有">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label required">Java</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="java" value="0" title="没有" checked="">
+                    <input type="radio" name="java" value="1" title="有">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label required">计算机原理</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="computerPrinciples" value="0" title="没有" checked="">
+                    <input type="radio" name="computerPrinciples" value="1" title="有">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label required">计算机网络</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="computerNetwork" value="0" title="没有" checked="">
+                    <input type="radio" name="computerNetwork" value="1" title="有">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label required">Oracle数据库</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="oracle" value="0" title="没有" checked="">
+                    <input type="radio" name="oracle" value="1" title="有">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label required">Web应用程序设计</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="web" value="0" title="没有" checked="">
+                    <input type="radio" name="web" value="1" title="有">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="saveBtn">确认保存</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="../../lib/layui-v2.5.5/layui.js" charset="utf-8"></script>
+<script src="../../lib/jquery-3.4.1/jquery-3.4.1.min.js" charset="utf-8"></script>
+<script src="../../js/common.js" charset="utf-8"></script>
+<script>
+    layui.use(['form', 'table'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            $ = layui.$;
+
+        var requestUrl;
+        if(sessionStorage.getItem(TYPE) === TYPE_EDIT){
+            setEditParam();
+            requestUrl = URL_ROOT + 'situation/updateSituation';
+        }else {
+            setAddParam();
+            requestUrl = URL_ROOT + 'situation/addSituation';
+        }
+        /**
+         * 初始化表单，要加上，不然刷新部分组件可能会不加载
+         */
+        form.render();
+
+        //监听提交
+        form.on('submit(saveBtn)', function (data) {
+            $.ajax({
+                type: 'POST',
+                dataType:'json',
+                url: requestUrl,
+                data: {
+                    json: JSON.stringify(data.field)
+                },
+                success: function (data) {
+                    layer.msg(data.msg);
+                    if(data.code === 0){
+                        parent.reloadTable();
+                        parent.layer.msg(data.msg);
+                        if(data.code === 0){
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                        }
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    layer.msg("请求失败");
+                }
+            });
+            return false;
+        });
+
+        function setAddParam(){
+            //表单赋值
+            form.val('teacher_situation_add', {
+                "teacherId": sessionStorage.getItem(TEACHER_ID)
+            });
+        }
+
+        function setEditParam(){
+            var data = JSON.parse(sessionStorage.getItem(DATA));
+            //表单赋值
+            form.val('teacher_situation_add', {
+                "id": data.id
+                ,"teacherId": data.teacherId
+                ,"combinedLanguage": data.combinedLanguage === true?'1':'0'
+                ,"combinedLanguagePlus": data.combinedLanguagePlus === true?'1':'0'
+                ,"advancedMathematics": data.advancedMathematics === true?'1':'0'
+                ,"english": data.english === true?'1':'0'
+                ,"dataStructure": data.dataStructure === true?'1':'0'
+                ,"java": data.java === true?'1':'0'
+                ,"computerPrinciples": data.computerPrinciples === true?'1':'0'
+                ,"computerNetwork": data.computerNetwork === true?'1':'0'
+                ,"oracle": data.oracle === true?'1':'0'
+                ,"web": data.web === true?'1':'0'
+            });
+        }
+    });
+</script>
+
+</body>
+</html>

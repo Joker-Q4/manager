@@ -34,8 +34,8 @@
 
         <script type="text/html" id="toolbarDemo">
             <div class="layui-btn-container">
-                <button class="layui-btn layui-btn-sm data-add-btn" lay-event="add"> 添加用户 </button>
-                <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="delete"> 删除用户 </button>
+                <button class="layui-btn layui-btn-sm data-add-btn" lay-event="add"> 添加教师 </button>
+                <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="delete"> 删除教师 </button>
             </div>
         </script>
 
@@ -61,14 +61,17 @@
 <script src="../../js/common.js" charset="utf-8"></script>
 <script>
 
+    var global_table;
     layui.use(['form', 'table', 'element'], function () {
         var $ = layui.jquery,
             form = layui.form,
             table = layui.table;
 
+        global_table = table;
+
         table.render({
             elem: '#teacherTableId',
-            url: '/queryTeachers',
+            url: '/teacher/queryTeachers',
             toolbar: '#toolbarDemo',
             defaultToolbar: ['filter', 'exports', 'print', {
                 title: '提示',
@@ -99,17 +102,8 @@
             layer.alert(result, {
                 title: '最终的搜索信息'
             });
-
             //执行搜索重载
-            table.reload('teacherTableId', {
-                page: {
-                    curr: 1
-                }
-                , where: {
-                    searchParams: result
-                }
-            }, 'data');
-
+            reloadTable();
             return false;
         });
 
@@ -119,7 +113,14 @@
         });
 
         table.on('tool(teacherTableFilter)', function (obj) {
+            var id = obj.data.id;
+            var name = obj.data.name;
+            sessionStorage.setItem(TEACHER_ID, id);
+            var url;
             if (obj.event === 'edit') {
+                sessionStorage.setItem(TYPE, TYPE_EDIT);
+                sessionStorage.setItem(DATA, JSON.stringify(obj.data));
+                url = 'add_teacher.html';
                 layer.open({
                     title: '修改信息',
                     type: 2,
@@ -130,15 +131,13 @@
                 });
                 return false;
             } else if (obj.event === 'delete') {
-                layer.confirm('真的删除行么', function (index) {
-                    obj.del();
+                layer.confirm('真的要删除吗?', function (index) {
+                    var url = URL_ROOT + 'teacher/deleteTeacher?id='+obj.data.id;
+                    deleteObject(url);
                     layer.close(index);
                 });
             } else if (obj.event === 'lookSituation') {  //查看教师授课情况
-                var id = obj.data.id;
-                var name = obj.data.name;
-                sessionStorage.setItem(TEACHER_ID, id);
-                var url = 'situation.html';
+                url = 'situation.html';
                 layer.open({
                     title: '修改信息',
                     type: 2,
@@ -148,10 +147,7 @@
                     content: url
                 });
             } else if (obj.event === 'lookExperience') {  //查看教师行业实践经历
-                var id = obj.data.id;
-                var name = obj.data.name;
-                sessionStorage.setItem(TEACHER_ID, id);
-                var url = 'experience.html';
+                url = 'experience.html';
                 layer.open({
                     title: '修改信息',
                     type: 2,
@@ -163,7 +159,49 @@
             }
         });
 
+        table.on('toolbar(teacherTableFilter)', function (obj) {
+            if (obj.event === 'add') {
+                sessionStorage.setItem(TYPE, TYPE_ADD);
+                var url = 'add_teacher.html';
+                layer.open({
+                    title: '添加教师',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin:true,
+                    shadeClose: true,
+                    area: ['80%', '80%'],
+                    content: url
+                });
+            } else if (obj.event === 'delete') {
+                var checkStatus = table.checkStatus('teacherTableId')
+                    , data = checkStatus.data;
+                if(data.length === 0){
+                    layer.alert("请先选中数据！");
+                    return;
+                }
+                layer.confirm('真的要删除吗?', function (index) {
+                    var temp = [];
+                    data.forEach(function (a) {
+                        temp.push(a.id);
+                    });
+                    var aa ={};
+                    aa.ids = temp;
+                    var url = URL_ROOT + 'teacher/deleteTeachers';
+                    deleteObjects(url, aa);
+                    layer.close(index);
+                });
+            }
+        });
+
     });
+
+    function reloadTable() {
+        global_table.reload('teacherTableId', {
+            page: {
+                curr: 1
+            }
+        }, 'data');
+    }
 
 </script>
 

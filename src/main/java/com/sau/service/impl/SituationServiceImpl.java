@@ -18,4 +18,23 @@ public class SituationServiceImpl implements SituationService {
     public List<TeachingSituation> getSituationByTeacherId(Integer teacherId) {
         return situationMapper.findSituationByTeacherId(teacherId);
     }
+
+    @Override
+    public boolean updateSituation(TeachingSituation teachingSituation) {
+        return situationMapper.updateSituation(teachingSituation) > 0;
+    }
+
+    @Override
+    public boolean addSituation(TeachingSituation teachingSituation) {
+        return situationMapper.insertSituation(teachingSituation) > 0;
+    }
+
+    @Override
+    public boolean deleteSituationById(Integer[] ids) {
+        boolean flag = true;
+        for (Integer id : ids) {
+            flag = flag && situationMapper.deleteSituation(id) > 0;
+        }
+        return flag;
+    }
 }

@@ -24,7 +24,7 @@
         DELETE FROM
             student
         WHERE
-            id = #{studentId}
+            id = #{id}
     </delete>
     <update id="updateStudentById" parameterType="com.sau.entity.Student">
         update student
