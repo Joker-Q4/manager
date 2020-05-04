@@ -30,13 +30,13 @@ public class StudentController {
     public Map<String, Object> queryAllStudents(@RequestParam(defaultValue = "") String studentId){
         if(studentId.isEmpty()){
             final List<Student> students = studentService.getAllStudents();
-            return JsonTools.toResult(0, "success", students.size(), students);
+            return JsonTools.toResult(0, "成功", students.size(), students);
         }
         Student student = studentService.getStudentById(Integer.valueOf(studentId));
         if(student != null)
-            return JsonTools.toResult(0, "success", 1, student);
+            return JsonTools.toResult(0, "成功", 1, student);
         else
-            return JsonTools.toResult(0, "success", 0, null);
+            return JsonTools.toResult(0, "成功", 0, null);
     }
 
     @PostMapping("/deleteStudents")

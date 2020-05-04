@@ -21,6 +21,11 @@ public class ThesisServiceImpl implements ThesisService {
     }
 
     @Override
+    public List<Thesis> getThesisByTeacherId(Integer teacherId) {
+        return thesisMapper.findThesisByTeacherId(teacherId);
+    }
+
+    @Override
     public boolean updateThesis(Thesis thesis) {
         return thesisMapper.updateThesis(thesis) > 0;
     }
@@ -28,6 +33,8 @@ public class ThesisServiceImpl implements ThesisService {
     @Override
     public boolean addThesis(Thesis thesis) {
         thesis.setCreateTime(new Timestamp(System.currentTimeMillis()));
+        if(thesis.getFileId() == null)
+            return false;
         return thesisMapper.insertThesis(thesis) > 0;
     }
 

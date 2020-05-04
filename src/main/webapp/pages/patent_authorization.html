@@ -6,8 +6,8 @@
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link rel="stylesheet" href="../../lib/layui-v2.5.5/css/layui.css" media="all">
-    <link rel="stylesheet" href="../../css/public.css" media="all">
+    <link rel="stylesheet" href="../lib/layui-v2.5.5/css/layui.css" media="all">
+    <link rel="stylesheet" href="../css/public.css" media="all">
 </head>
 <body>
 <div class="layuimini-container">
@@ -25,31 +25,35 @@
                             </div>
                         </div>
                         <div class="layui-inline">
-                            <button type="submit" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                            <button type="submit" class="layui-btn layui-btn-primary" lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
                         </div>
                     </div>
                 </form>
             </div>
         </fieldset>
 
-        <script type="text/html" id="toolbarExperience">
+        <script type="text/html" id="toolbarAchievement">
             <div class="layui-btn-container">
-                <button class="layui-btn layui-btn-sm data-add-btn" lay-event="add"> 添加实践经历 </button>
+                <button class="layui-btn layui-btn-sm data-add-btn" lay-event="add"> 添加项目成果 </button>
                 <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="delete"> 删除 </button>
             </div>
         </script>
 
-        <table class="layui-hide" id="ExperienceTable" lay-filter="ExperienceTableFilter"></table>
+        <script type="text/html" id="downloadTableBar">
+            <a class="layui-btn layui-btn-xs data-count-edit" lay-event="download">下载</a>
+        </script>
 
         <script type="text/html" id="currentTableBar">
             <a class="layui-btn layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
         </script>
 
+        <table class="layui-hide" id="AchievementTable" lay-filter="AchievementTableFilter"></table>
+
     </div>
 </div>
-<script src="../../lib/layui-v2.5.5/layui.js" charset="utf-8"></script>
-<script src="../../lib/jquery-3.4.1/jquery-3.4.1.min.js" charset="utf-8"></script>
-<script src="../../js/common.js" charset="utf-8"></script>
+<script src="../lib/layui-v2.5.5/layui.js" charset="utf-8"></script>
+<script src="../lib/jquery-3.4.1/jquery-3.4.1.min.js" charset="utf-8"></script>
+<script src="../js/common.js" charset="utf-8"></script>
 <script>
 
     var global_table;
@@ -59,12 +63,21 @@
             table = layui.table;
 
         global_table = table;
-        var teacherId = sessionStorage.getItem(TEACHER_ID);
+        var id;
+        var url = '/patentAuthorization';
+        var type = sessionStorage.getItem(TYPE_ST);
+        if(type === TYPE_S){
+            id = sessionStorage.getItem(STUDENT_ID);
+            url += '/getAuthorizationByStudentId?studentId=' + id;
+        }else if(type === TYPE_T){
+            id = sessionStorage.getItem(TEACHER_ID);
+            url += '/getAuthorizationByTeacherId?teacherId=' + id;
+        }
 
         table.render({
-            elem: '#ExperienceTable',
-            url: '/experience/getExperienceByTeacherId?teacherId='+teacherId,
-            toolbar: '#toolbarExperience',
+            elem: '#AchievementTable',
+            url: url,
+            toolbar: '#toolbarAchievement',
             defaultToolbar: ['filter', 'exports', 'print', {
                 title: '提示',
                 layEvent: 'LAYTABLE_TIPS',
@@ -72,13 +85,15 @@
             }],
             cols: [[
                 {type: "checkbox", width: 50, fixed: "left"},
-                {field: 'id', width: 80, title: 'ID', sort: true, hide: true},
-                {field: 'title', width: 80, title: '标题'},
-                {field: 'description', width: 80, title: '描述', sort: true},
-                {field: 'time', width: 120, title: '时间'},
-                {field: 'location', width: 180, title: '地点'},
-                {field: 'teacherId', width: 180, title: '教师Id', hide: true},
-                {title: '操作', minwidth: 100, toolbar: '#currentTableBar', fixed: "right", align: "center"}
+                {field: 'id', width: 80, title: 'ID', sort: true},
+                {field: 'name', width: 180, title: '名字', edit: true},
+                {field: 'description', width: 200, title: '详细描述', edit: true},
+                {field: 'createTime', width: 120, title: '创建时间'},
+                {field: 'fileId', width: 120, title: '下载文件', align:"center"
+                    ,templet: function(data){
+                        return '<a class="layui-btn layui-btn-xs data-count-edit" onclick="downloadFile('+data.fileId+')">下载</a>';
+                    }},
+                {title: '操作', minwidth: 80, toolbar: '#currentTableBar', fixed: "right", align: "center"}
             ]],
             limits: [10, 15, 20, 25, 50, 100],
             limit: 15,
@@ -93,7 +108,7 @@
             });
 
             //执行搜索重载
-            table.reload('ExperienceTable', {
+            table.reload('AchievementTable', {
                 page: {
                     curr: 1
                 }
@@ -105,21 +120,26 @@
             return false;
         });
 
-        table.on('toolbar(ExperienceTableFilter)', function (obj) {
-            if (obj.event === 'add') {
+        table.on('toolbar(AchievementTableFilter)', function (obj) {
+            var url;
+            if(type === TYPE_S){
+                sessionStorage.setItem(STUDENT_ID, id);
+            }else if(type === TYPE_T){
+                sessionStorage.setItem(TEACHER_ID, id);
+            }
+            if (obj.event === 'add') {   // 监听添加操作
                 sessionStorage.setItem(TYPE, TYPE_ADD);
-                var url = 'add_experience.html';
+                url = 'patent_authorization_add.html';
                 layer.open({
-                    title: '添加实践经历',
+                    title: '项目成果录入',
                     type: 2,
-                    shade: 0.2,
                     maxmin:true,
                     shadeClose: true,
                     area: ['90%', '90%'],
                     content: url
                 });
-            } else if (obj.event === 'delete') {
-                var checkStatus = table.checkStatus('ExperienceTable')
+            }else if (obj.event === 'delete') {
+                var checkStatus = table.checkStatus('AchievementTable')
                     , data = checkStatus.data;
                 if(data.length === 0){
                     layer.alert("请先选中数据！");
@@ -132,21 +152,31 @@
                     });
                     var aa ={};
                     aa.ids = temp;
-                    var url = URL_ROOT + 'experience/deleteExperiences';
+                    url = URL_ROOT + 'patentAuthorization/deleteAuthorization';
                     deleteObjects(url, aa);
                     layer.close(index);
                 });
             }
         });
 
-        table.on('tool(ExperienceTableFilter)', function (obj) {
-            var url;
+        table.on('edit(AchievementTableFilter)', function(obj){ //注：edit是固定事件名，test是table原始容器的属性 lay-filter="对应的值"
+            console.log(obj.value); //得到修改后的值
+            console.log(obj.field); //当前编辑的字段名
+            console.log(obj.data);  //所在行的所有相关数据
+            var url = URL_ROOT + 'thesis/updateThesis';
+            var requestData = {};
+            requestData.id = parseInt(obj.data.id);
+            requestData[obj.field] = obj.value;
+            request(url, requestData);
+        });
+
+        table.on('tool(AchievementTableFilter)', function (obj) {
             if (obj.event === 'edit') {
                 sessionStorage.setItem(TYPE, TYPE_EDIT);
                 sessionStorage.setItem(DATA, JSON.stringify(obj.data));
-                url = 'add_experience.html';
+                var url = 'patent_authorization_add.html';
                 layer.open({
-                    title: '修改信息',
+                    title: '项目成果修改',
                     type: 2,
                     maxmin:true,
                     shadeClose: true,
@@ -154,23 +184,20 @@
                     content: url
                 });
                 return false;
-            } else if (obj.event === 'delete') {
-                layer.confirm('真的要删除吗?', function (index) {
-                    url = URL_ROOT + 'experience/deleteTeacher?id='+obj.data.id;
-                    deleteObject(url);
-                    layer.close(index);
-                });
             }
         });
-
     });
 
     function reloadTable() {
-        global_table.reload('ExperienceTable', {
+        global_table.reload('AchievementTable', {
             page: {
                 curr: 1
             }
         }, 'data');
+    }
+
+    function downloadFile(id) {
+        window.location.href = URL_ROOT + 'file/download/' + id;
     }
 
 </script>

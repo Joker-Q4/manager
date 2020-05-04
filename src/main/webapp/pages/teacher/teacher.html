@@ -54,6 +54,26 @@
             <a class="layui-btn layui-btn-xs data-count-edit" lay-event="lookExperience">查看</a>
         </script>
 
+        <!-- 发表论文情况 -->
+        <script type="text/html" id="teacherThesis">
+            <a class="layui-btn layui-btn-xs data-count-edit" lay-event="lookThesis">查看</a>
+        </script>
+
+        <!-- 项目成果 -->
+        <script type="text/html" id="teacherAchievement">
+            <a class="layui-btn layui-btn-xs data-count-edit" lay-event="lookAchievement">查看</a>
+        </script>
+
+        <!-- 科技成果 -->
+        <script type="text/html" id="teacherSTAward">
+            <a class="layui-btn layui-btn-xs data-count-edit" lay-event="lookSTAward">查看</a>
+        </script>
+
+        <!-- 专利授权 -->
+        <script type="text/html" id="teacherPatent">
+            <a class="layui-btn layui-btn-xs data-count-edit" lay-event="lookPatent">查看</a>
+        </script>
+
     </div>
 </div>
 <script src="../../lib/layui-v2.5.5/layui.js" charset="utf-8"></script>
@@ -89,6 +109,10 @@
                 {field: 'title', width: 120, title: '职称'},
                 {title: '授课情况', minwidth: 100, toolbar: '#teachingSituation', align: "center"},
                 {title: '行业经验', minwidth: 100, toolbar: '#industryExperience', fixed: "right", align: "center"},
+                {title: '论文情况', minwidth: 100, toolbar: '#teacherThesis', fixed: "right", align: "center"},
+                {title: '项目成果', minwidth: 100, toolbar: '#teacherAchievement', fixed: "right", align: "center"},
+                {title: '科技成果', minwidth: 100, toolbar: '#teacherSTAward', fixed: "right", align: "center"},
+                {title: '专利授权', minwidth: 100, toolbar: '#teacherPatent', fixed: "right", align: "center"},
                 {title: '操作', minwidth: 100, toolbar: '#currentTableBar', fixed: "right", align: "center"}
             ]],
             limits: [10, 15, 20, 25, 50, 100],
@@ -126,7 +150,7 @@
                     type: 2,
                     maxmin:true,
                     shadeClose: true,
-                    area: ['80%', '80%'],
+                    area: ['90%', '90%'],
                     content: url
                 });
                 return false;
@@ -143,7 +167,7 @@
                     type: 2,
                     maxmin:true,
                     shadeClose: true,
-                    area: ['80%', '80%'],
+                    area: ['90%', '90%'],
                     content: url
                 });
             } else if (obj.event === 'lookExperience') {  //查看教师行业实践经历
@@ -153,7 +177,55 @@
                     type: 2,
                     maxmin:true,
                     shadeClose: true,
-                    area: ['80%', '80%'],
+                    area: ['90%', '90%'],
+                    content: url
+                });
+            } else if (obj.event === 'lookThesis') {
+                sessionStorage.setItem(TYPE_ST, TYPE_T);
+                url = '../thesis.html';
+                layer.open({
+                    title: '<font color="red">'+name+'</font>' + '&nbsp;的发表论文情况',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin:true,
+                    area: ['90%', '90%'],
+                    shadeClose: true,
+                    content: url
+                });
+            } else if (obj.event === 'lookAchievement') {
+                sessionStorage.setItem(TYPE_ST, TYPE_T);
+                url = '../project_achievement.html';
+                layer.open({
+                    title: '<font color="red">'+name+'</font>' + '&nbsp;的项目成果',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin:true,
+                    area: ['90%', '90%'],
+                    shadeClose: true,
+                    content: url
+                });
+            } else if (obj.event === 'lookSTAward') {
+                sessionStorage.setItem(TYPE_ST, TYPE_T);
+                url = '../s_t_award.html';
+                layer.open({
+                    title: '<font color="red">'+name+'</font>' + '&nbsp;的科技成果',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin:true,
+                    area: ['90%', '90%'],
+                    shadeClose: true,
+                    content: url
+                });
+            } else if (obj.event === 'lookPatent') {
+                sessionStorage.setItem(TYPE_ST, TYPE_T);
+                url = '../patent_authorization.html';
+                layer.open({
+                    title: '<font color="red">'+name+'</font>' + '&nbsp;的专利授权',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin:true,
+                    area: ['90%', '90%'],
+                    shadeClose: true,
                     content: url
                 });
             }
@@ -169,7 +241,7 @@
                     shade: 0.2,
                     maxmin:true,
                     shadeClose: true,
-                    area: ['80%', '80%'],
+                    area: ['90%', '90%'],
                     content: url
                 });
             } else if (obj.event === 'delete') {

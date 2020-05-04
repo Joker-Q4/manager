@@ -1,4 +1,4 @@
-package com.sau.util;
+package com.sau.utils;
 
 import com.sau.entity.MenuVo;
 

@@ -1,15 +1,12 @@
 package com.sau.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.sau.entity.FileBinding;
-import com.sau.entity.PatentAuthorization;
-import com.sau.entity.Thesis;
+import com.sau.entity.ProjectAchievement;
 import com.sau.global.Global;
 import com.sau.global.GlobalKey;
 import com.sau.global.JsonTools;
-import com.sau.service.ThesisService;
+import com.sau.service.ProjectAchievementService;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -19,99 +16,99 @@ import java.util.Map;
 import java.util.Properties;
 
 @RestController
-@RequestMapping("/thesis")
-public class ThesisController {
+@RequestMapping("/achievement")
+public class ProjectAchievementController {
 
     @Resource
-    ThesisService thesisService;
+    ProjectAchievementService service;
 
-    @GetMapping("/getThesisByStudentId")
-    public Map<String, Object> getThesisByStudentId(@RequestParam(defaultValue = "") String studentId){
+    @GetMapping("/getAchievementByStudentId")
+    public Map<String, Object> getAchievementByStudentId(@RequestParam(defaultValue = "") String studentId){
         if(studentId.isEmpty()){
             return JsonTools.toResult(1, "参数有误", 0, null);
         }
-        final List<Thesis> list = thesisService.getThesisByStudentId(Integer.valueOf(studentId));
+        final List<ProjectAchievement> list = service.findAchievementByStudentId(Integer.valueOf(studentId));
         return JsonTools.toResult(0, "成功", list.size(), list);
     }
 
-    @GetMapping("/getThesisByTeacherId")
-    public Map<String, Object> getThesisByTeacherId(@RequestParam(defaultValue = "") String teacherId){
+    @GetMapping("/getAchievementByTeacherId")
+    public Map<String, Object> getAchievementByTeacherId(@RequestParam(defaultValue = "") String teacherId){
         if(teacherId.isEmpty()){
             return JsonTools.toResult(1, "参数有误", 0, null);
         }
-        final List<Thesis> list = thesisService.getThesisByTeacherId(Integer.valueOf(teacherId));
+        final List<ProjectAchievement> list = service.findAchievementByTeacherId(Integer.valueOf(teacherId));
         return JsonTools.toResult(0, "成功", list.size(), list);
     }
 
-    @PostMapping("/updateThesis")
-    public Map<String, Object> updateThesis(
+    @PostMapping("/updateAchievement")
+    public Map<String, Object> updateAchievement(
             HttpServletRequest request
     ) throws UnsupportedEncodingException {
         final Properties properties = Global.getRequest(request);
-        Thesis thesis = analyzeJson(properties);
-        if(thesis.getId() == null){
+        ProjectAchievement projectAchievement = analyzeJson(properties);
+        if(projectAchievement.getId() == null){
             return JsonTools.toResult(1, "id不能为空", 0, null);
         }
-        if(thesisService.updateThesis(thesis))
+        if(service.updateAchievement(projectAchievement))
             return JsonTools.toResult(0, "修改成功", 0, null);
         return JsonTools.toResult(1, "修改失败", 0, null);
     }
 
-    @PostMapping("/deleteThesis")
-    public Map<String, Object> deleteThesis(
+    @PostMapping("/deleteAchievement")
+    public Map<String, Object> deleteAchievement(
             HttpServletRequest request
     ) throws UnsupportedEncodingException {
         final Properties properties = Global.getRequest(request);
         String[] idArr = CommonController.delete(properties);
-        if(thesisService.deleteThesis(Global.stringFormatInteger(idArr))){
+        if(service.deleteAchievements(Global.stringFormatInteger(idArr))){
             return JsonTools.toResult(0, "删除成功", 0, null);
         }
         return JsonTools.toResult(1, "删除失败", 0, null);
     }
 
-    @PostMapping("/addThesis")
-    public Map<String, Object> addThesis(
+    @PostMapping("/addAchievement")
+    public Map<String, Object> addAchievement(
             HttpServletRequest request
     ) throws UnsupportedEncodingException {
         final Properties properties = Global.getRequest(request);
-        Thesis thesis = analyzeJson(properties);
-        if(thesisService.addThesis(thesis))
+        ProjectAchievement projectAchievement = analyzeJson(properties);
+        if(service.addAchievement(projectAchievement))
             return JsonTools.toResult(0, "添加成功", 0, null);
         return JsonTools.toResult(1, "添加失败", 0, null);
     }
 
-    private Thesis analyzeJson(Properties properties){
+    private ProjectAchievement analyzeJson(Properties properties){
         final String json = properties.getProperty("json");
         JSONObject jsonObject = JSONObject.parseObject(json);
-        return getThesis(jsonObject);
+        return getAchievement(jsonObject);
     }
 
-    private Thesis getThesis(JSONObject jsonObject){
-        Thesis thesis = new Thesis();
+    private ProjectAchievement getAchievement(JSONObject jsonObject){
+        ProjectAchievement projectAchievement = new ProjectAchievement();
         final String id = jsonObject.getString(GlobalKey.ID);
         if(id != null && !id.isEmpty()){
-            thesis.setId(Integer.parseInt(id));
+            projectAchievement.setId(Integer.parseInt(id));
         }
-        final String title = jsonObject.getString(GlobalKey.TITLE);
-        if(title != null && !title.isEmpty()){
-            thesis.setTitle(title);
+        final String name = jsonObject.getString(GlobalKey.NAME);
+        if(name != null && !name.isEmpty()){
+            projectAchievement.setName(name);
         }
         final String description = jsonObject.getString(GlobalKey.DESCRIPTION);
         if(description != null && !description.isEmpty()){
-            thesis.setDescription(description);
+            projectAchievement.setDescription(description);
         }
         final String fileId = jsonObject.getString(GlobalKey.FILE_ID);
         if(fileId != null && !fileId.isEmpty()){
-            thesis.setFileId(Integer.parseInt(fileId));
+            projectAchievement.setFileId(Integer.parseInt(fileId));
         }
         final String studentId = jsonObject.getString(GlobalKey.STUDENT_ID);
         if(studentId != null && !studentId.isEmpty()){
-            thesis.setStudentId(Integer.parseInt(studentId));
+            projectAchievement.setStudentId(Integer.parseInt(studentId));
         }
         final String teacherId = jsonObject.getString(GlobalKey.TEACHER_ID);
         if(teacherId != null && !teacherId.isEmpty()){
-            thesis.setTeacherId(Integer.parseInt(teacherId));
+            projectAchievement.setTeacherId(Integer.parseInt(teacherId));
         }
-        return thesis;
+        return projectAchievement;
     }
 }

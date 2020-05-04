@@ -3,20 +3,20 @@ package com.sau.entity;
 import java.sql.Timestamp;
 
 /**
- * 学生发表论文
+ * 科技成果奖
  */
-public class Thesis {
+public class ScienceTechnologyAchievementAward {
 
     private Integer id;
-    private String title;          //题目
-    private String description;    //详细描述
+    private String name;
+    private String description;
     private Integer fileId;
     private FileBinding file;
     private Integer studentId;
     private Student student;
     private Integer teacherId;
     private Teacher teacher;
-    private Timestamp createTime;  //创建时间
+    private Timestamp createTime;
 
     public Integer getId() {
         return id;
@@ -26,12 +26,12 @@ public class Thesis {
         this.id = id;
     }
 
-    public String getTitle() {
-        return title;
+    public String getName() {
+        return name;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {
@@ -42,20 +42,20 @@ public class Thesis {
         this.description = description;
     }
 
-    public Integer getFileId() {
-        return fileId;
-    }
-
-    public void setFileId(Integer fileId) {
-        this.fileId = fileId;
-    }
-
     public FileBinding getFile() {
         return file;
     }
 
     public void setFile(FileBinding file) {
         this.file = file;
+    }
+
+    public Integer getFileId() {
+        return fileId;
+    }
+
+    public void setFileId(Integer fileId) {
+        this.fileId = fileId;
     }
 
     public Integer getStudentId() {
@@ -96,21 +96,5 @@ public class Thesis {
 
     public void setCreateTime(Timestamp createTime) {
         this.createTime = createTime;
-    }
-
-    @Override
-    public String toString() {
-        return "Thesis{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", fileId=" + fileId +
-                ", file=" + file +
-                ", studentId=" + studentId +
-                ", student=" + student +
-                ", teacherId=" + teacherId +
-                ", teacher=" + teacher +
-                ", createTime=" + createTime +
-                '}';
     }
 }

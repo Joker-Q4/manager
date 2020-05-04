@@ -9,6 +9,7 @@ import java.util.List;
 public interface ThesisMapper {
 
     List<Thesis> findThesisByStudentId(Integer studentId);
+    List<Thesis> findThesisByTeacherId(Integer teacherId);
     Integer updateThesis(Thesis thesis);
     Integer insertThesis(Thesis thesis);
     Integer deleteThesis(Integer id);

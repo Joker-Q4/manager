@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sau.mapper.PatentAuthorizationMapper">
+    <resultMap id="patentAuthorization" type="com.sau.entity.PatentAuthorization">
+        <id property="id" column="id" javaType="Integer"/>
+        <result property="name" column="name" javaType="String"/>
+        <result property="description" column="description" javaType="String"/>
+        <result property="fileId" column="file_id" javaType="Integer"/>
+        <result property="studentId" column="student_id" javaType="Integer"/>
+        <result property="teacherId" column="teacher_id" javaType="Integer"/>
+        <result property="createTime" column="create_time" javaType="java.sql.Timestamp"/>
+    </resultMap>
+    <select id="findPatentAuthorizationByStudentId" resultMap="patentAuthorization">
+        SELECT *
+        FROM patent_authorization
+        where student_id = #{studentId}
+    </select>
+
+    <select id="findPatentAuthorizationByTeacherId" resultMap="patentAuthorization">
+        SELECT *
+        FROM patent_authorization
+        where teacher_id = #{teacherId}
+    </select>
+
+    <update id="updatePatentAuthorization" parameterType="com.sau.entity.PatentAuthorization">
+        update patent_authorization
+        set
+        <trim suffixOverrides="," >
+            <if test="name != null">
+                name=#{name},
+            </if>
+            <if test="description != null">
+                description=#{description},
+            </if>
+            <if test="fileId != null">
+                file_id=#{fileId},
+            </if>
+            <if test="createTime != null">
+                create_time=#{createTime},
+            </if>
+        </trim>
+        where id=#{id}
+    </update>
+    <insert id="insertPatentAuthorization" useGeneratedKeys="true" keyProperty="id"
+            keyColumn="id" parameterType="com.sau.entity.PatentAuthorization">
+        INSERT INTO
+            patent_authorization(name, description, file_id, student_id, teacher_id, create_time)
+        VALUES
+        (#{name},#{description},#{fileId},#{studentId},#{teacherId},#{createTime})
+    </insert>
+    <delete id="deletePatentAuthorizationById">
+        DELETE FROM
+            patent_authorization
+        WHERE
+            id = #{id}
+    </delete>
+</mapper>

@@ -4,6 +4,9 @@ var TYPE = "ADD_OR_EDIT";
 var TYPE_ADD = "TYPE_ADD";
 var TYPE_EDIT = "TYPE_EDIT";
 var DATA = "DATA";
+var TYPE_ST = "STUDENT_OR_TEACHER";
+var TYPE_S = "TYPE_STUDENT";
+var TYPE_T = "TYPE_TEACHER";
 var URL_ROOT = "http://localhost/";
 
 function getParamValue(variable) {

@@ -5,7 +5,7 @@ import com.sau.entity.MenuVo;
 import com.sau.entity.SysMenu;
 import com.sau.mapper.SysMenuMapper;
 import com.sau.service.SysMenuService;
-import com.sau.util.TreeUtil;
+import com.sau.utils.TreeUtil;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

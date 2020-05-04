@@ -9,12 +9,25 @@
         <result property="title" column="title" javaType="String"/>
         <result property="description" column="description" javaType="String"/>
         <result property="createTime" column="create_time" javaType="java.sql.Timestamp"/>
+        <result property="fileId" column="file_id" javaType="Integer"/>
         <result property="studentId" column="student_id" javaType="Integer"/>
+        <result property="teacherId" column="teacher_id" javaType="Integer"/>
+        <!--<association property="file" column="file_id" javaType="com.sau.entity.FileBinding">-->
+            <!--<result property="id" column="f_id" javaType="Integer"/>-->
+            <!--<result property="name" column="f_name" javaType="String"/>-->
+            <!--<result property="path" column="f_path" javaType="String"/>-->
+            <!--<result property="createTime" column="f_create_time" javaType="java.sql.Timestamp"/>-->
+        <!--</association>-->
     </resultMap>
     <select id="findThesisByStudentId" resultMap="thesis">
         SELECT *
         FROM thesis
         where student_id = #{studentId}
+    </select>
+    <select id="findThesisByTeacherId" resultMap="thesis">
+        SELECT *
+        FROM thesis
+        where teacher_id = #{teacherId}
     </select>
     <update id="updateThesis" parameterType="com.sau.entity.Thesis">
         update thesis
@@ -26,15 +39,18 @@
             <if test="description != null">
                 description=#{description},
             </if>
+            <if test="description != null">
+                file_id=#{fileId},
+            </if>
         </trim>
         where id=#{id}
     </update>
     <insert id="insertThesis" useGeneratedKeys="true" keyProperty="id"
             keyColumn="id" parameterType="com.sau.entity.Thesis">
         INSERT INTO
-            thesis(title, description, create_time, student_id)
+            thesis(title, description, create_time, file_id, student_id, teacher_id)
         VALUES
-            (#{title},#{description},#{createTime},#{studentId})
+            (#{title},#{description},#{createTime},#{fileId},#{studentId},#{teacherId})
     </insert>
     <delete id="deleteThesis">
         DELETE FROM
