@@ -63,4 +63,12 @@ public class BusinessPractice {
                 ", studentId=" + studentId +
                 '}';
     }
+
+    public String getString(){
+        return id + " " +
+                name + " " +
+                description + " " +
+                createTime + " " +
+                studentId;
+    }
 }

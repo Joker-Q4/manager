@@ -9,8 +9,19 @@ public class Teacher {
     private String address;           //家庭住址
     private String academicDegree;    //学位
     private String title;             //高级职称
-   // private String teachingSituation;    //授课情况
- //   private String industryExperience;   //行业实践经历
+
+    //授课情况
+    private String teachingSituation;
+    //行业实践经历
+    private String industryExperience;
+    //论文情况
+    private String thesis;
+    //项目成果
+    private String projectAchievement;
+    //科技成果
+    private String scienceTechnologyAchievementAward;
+    //专利授权
+    private String patentAuthorization;
 
     public Integer getId() {
         return id;
@@ -68,6 +79,54 @@ public class Teacher {
         this.title = title;
     }
 
+    public String getTeachingSituation() {
+        return teachingSituation;
+    }
+
+    public void setTeachingSituation(String teachingSituation) {
+        this.teachingSituation = teachingSituation;
+    }
+
+    public String getIndustryExperience() {
+        return industryExperience;
+    }
+
+    public void setIndustryExperience(String industryExperience) {
+        this.industryExperience = industryExperience;
+    }
+
+    public String getThesis() {
+        return thesis;
+    }
+
+    public void setThesis(String thesis) {
+        this.thesis = thesis;
+    }
+
+    public String getProjectAchievement() {
+        return projectAchievement;
+    }
+
+    public void setProjectAchievement(String projectAchievement) {
+        this.projectAchievement = projectAchievement;
+    }
+
+    public String getScienceTechnologyAchievementAward() {
+        return scienceTechnologyAchievementAward;
+    }
+
+    public void setScienceTechnologyAchievementAward(String scienceTechnologyAchievementAward) {
+        this.scienceTechnologyAchievementAward = scienceTechnologyAchievementAward;
+    }
+
+    public String getPatentAuthorization() {
+        return patentAuthorization;
+    }
+
+    public void setPatentAuthorization(String patentAuthorization) {
+        this.patentAuthorization = patentAuthorization;
+    }
+
     @Override
     public String toString() {
         return "Teacher{" +
@@ -79,5 +138,21 @@ public class Teacher {
                 ", academicDegree='" + academicDegree + '\'' +
                 ", title='" + title + '\'' +
                 '}';
+    }
+
+    public String getString(){
+        return id + " " +
+                name + " " +
+                sex + " " +
+                phoneNumber + " " +
+                address + " " +
+                title + " " +
+                academicDegree + " " +
+                teachingSituation + " " +
+                industryExperience + " " +
+                thesis + " " +
+                projectAchievement + " " +
+                scienceTechnologyAchievementAward + " " +
+                patentAuthorization;
     }
 }

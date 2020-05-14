@@ -141,4 +141,20 @@ public class Grade {
                 ", student=" + student +
                 '}';
     }
+
+    public String getString(){
+        return id + " " +
+                combinedLanguage + " " +
+                combinedLanguagePlus + " " +
+                advancedMathematics + " " +
+                english + " " +
+                dataStructure + " " +
+                java + " " +
+                computerPrinciples + " " +
+                computerNetwork + " " +
+                oracle + " " +
+                web + " " +
+                studentId + " " +
+                student;
+    }
 }

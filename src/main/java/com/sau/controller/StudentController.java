@@ -1,11 +1,12 @@
 package com.sau.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.sau.entity.Student;
+import com.sau.entity.*;
 import com.sau.global.Global;
 import com.sau.global.GlobalKey;
 import com.sau.global.JsonTools;
-import com.sau.service.StudentService;
+import com.sau.service.*;
+import com.sau.utils.KMPUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -23,20 +25,52 @@ public class StudentController {
 
     @Resource
     StudentService studentService;
+    @Resource
+    GradeService gradeService;
+    @Resource
+    PrizeService prizeService;
+    @Resource
+    BusinessPracticeService businessPracticeService;
+    @Resource
+    ThesisService thesisService;
+    @Resource
+    ProjectAchievementService projectAchievementService;
+    @Resource
+    STAwardService stAwardService;
+    @Resource
+    PatentAuthorizationService patentAuthorizationService;
 
     private static final Logger logger = LoggerFactory.getLogger(StudentController.class);
 
     @GetMapping("/queryAllStudents")
-    public Map<String, Object> queryAllStudents(@RequestParam(defaultValue = "") String studentId){
-        if(studentId.isEmpty()){
+    public Map<String, Object> queryAllStudents(
+            @RequestParam(defaultValue = "") String studentId,
+            @RequestParam(defaultValue = "") String key
+    ){
+        if(key.isEmpty()){
+            if(studentId.isEmpty()){
+                final List<Student> students = studentService.getAllStudents();
+                return JsonTools.toResult(0, "成功", students.size(), students);
+            }
+            Student student = studentService.getStudentById(Integer.valueOf(studentId));
+            if(student != null)
+                return JsonTools.toResult(0, "成功", 1, student);
+            else
+                return JsonTools.toResult(0, "成功", 0, null);
+        }else {
             final List<Student> students = studentService.getAllStudents();
-            return JsonTools.toResult(0, "成功", students.size(), students);
+            final List<Student> result = new ArrayList<>();
+            for(Student student: students){
+                Integer id = student.getId();
+                setProperty(student, id);
+                int[] temp = KMPUtils.kmpNext(key);
+                if(KMPUtils.kmpSearch(student.getString(), key, temp) != -1){
+                    //说明存在
+                    result.add(student);
+                }
+            }
+            return JsonTools.toResult(0, "成功", result.size(), result);
         }
-        Student student = studentService.getStudentById(Integer.valueOf(studentId));
-        if(student != null)
-            return JsonTools.toResult(0, "成功", 1, student);
-        else
-            return JsonTools.toResult(0, "成功", 0, null);
     }
 
     @PostMapping("/deleteStudents")
@@ -116,5 +150,57 @@ public class StudentController {
             student.setAddress(address);
         }
         return student;
+    }
+
+    private void setProperty(Student student, int id){
+        //各科成绩
+        List<Grade> gradeList = gradeService.getGradeByStudentId(id);
+        StringBuilder gradeString = new StringBuilder();
+        for(Grade grade: gradeList){
+            gradeString.append(grade.getString());
+        }
+        student.setGrade(gradeString.toString());
+        //获奖情况
+        List<Prize> prizeList = prizeService.getPrizeByStudentId(id);
+        StringBuilder prizeString = new StringBuilder();
+        for(Prize prize: prizeList){
+            prizeString.append(prize.getString());
+        }
+        student.setPrize(prizeString.toString());
+        //企业实践活动
+        List<BusinessPractice> practiceList = businessPracticeService.getPracticeByStudentId(id);
+        StringBuilder practiceString = new StringBuilder();
+        for(BusinessPractice businessPractice: practiceList){
+            practiceString.append(businessPractice.getString());
+        }
+        student.setBusinessPractice(practiceString.toString());
+        //论文情况
+        List<Thesis> thesisList = thesisService.getThesisByStudentId(id);
+        StringBuilder thesisString = new StringBuilder();
+        for(Thesis thesis: thesisList){
+            thesisString.append(thesis.getString());
+        }
+        student.setThesis(thesisString.toString());
+        //项目成果
+        List<ProjectAchievement> achievementList = projectAchievementService.findAchievementByStudentId(id);
+        StringBuilder achievementString = new StringBuilder();
+        for(ProjectAchievement projectAchievement: achievementList){
+            achievementString.append(projectAchievement.getString());
+        }
+        student.setProjectAchievement(achievementString.toString());
+        //科技成果
+        List<ScienceTechnologyAchievementAward> STAAList = stAwardService.findSTAwardByStudentId(id);
+        StringBuilder STAAString = new StringBuilder();
+        for(ScienceTechnologyAchievementAward scienceTechnologyAchievementAward: STAAList){
+            STAAString.append(scienceTechnologyAchievementAward.getString());
+        }
+        student.setScienceTechnologyAchievementAward(STAAString.toString());
+        //专利授权
+        List<PatentAuthorization> patentList = patentAuthorizationService.findAuthorizationByStudentId(id);
+        StringBuilder patentString = new StringBuilder();
+        for(PatentAuthorization patentAuthorization: patentList){
+            patentString.append(patentAuthorization.getString());
+        }
+        student.setPatentAuthorization(patentString.toString());
     }
 }

@@ -19,9 +19,9 @@
                 <form class="layui-form layui-form-pane" action="">
                     <div class="layui-form-item">
                         <div class="layui-inline">
-                            <label class="layui-form-label">用户姓名</label>
+                            <label class="layui-form-label">关键字</label>
                             <div class="layui-input-inline">
-                                <input type="text" name="name" autocomplete="off" class="layui-input">
+                                <input type="text" name="key" autocomplete="off" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-inline">
@@ -46,41 +46,6 @@
             <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
         </script>
 
-        <!-- 各科成绩 -->
-        <script type="text/html" id="studentGrade">
-            <a class="layui-btn layui-btn-xs data-count-edit" lay-event="lookGrade">查看</a>
-        </script>
-
-        <!-- 得奖情况 -->
-        <script type="text/html" id="studentPrize">
-            <a class="layui-btn layui-btn-xs data-count-edit" lay-event="lookPrize">查看</a>
-        </script>
-
-        <!-- 参加企业实践活动 -->
-        <script type="text/html" id="studentBusinessPractice">
-            <a class="layui-btn layui-btn-xs data-count-edit" lay-event="lookBusinessPractice">查看</a>
-        </script>
-
-        <!-- 发表论文情况 -->
-        <script type="text/html" id="studentThesis">
-            <a class="layui-btn layui-btn-xs data-count-edit" lay-event="lookThesis">查看</a>
-        </script>
-
-        <!-- 项目成果 -->
-        <script type="text/html" id="studentAchievement">
-            <a class="layui-btn layui-btn-xs data-count-edit" lay-event="lookAchievement">查看</a>
-        </script>
-
-        <!-- 科技成果 -->
-        <script type="text/html" id="studentSTAward">
-            <a class="layui-btn layui-btn-xs data-count-edit" lay-event="lookSTAward">查看</a>
-        </script>
-
-        <!-- 专利授权 -->
-        <script type="text/html" id="studentPatent">
-            <a class="layui-btn layui-btn-xs data-count-edit" lay-event="lookPatent">查看</a>
-        </script>
-
     </div>
 </div>
 <script src="../../lib/layui-v2.5.5/layui.js" charset="utf-8"></script>
@@ -88,6 +53,7 @@
 <script src="../../js/common.js" charset="utf-8"></script>
 <script>
     var global_table;
+    var key = "";
     layui.use(['form', 'table', 'element'], function () {
         var $ = layui.jquery,
             form = layui.form,
@@ -107,18 +73,81 @@
             cols: [[
                 {type: "checkbox", width: 50, fixed: "left"},
                 {field: 'id', width: 90, title: 'ID', sort: true, hide: true},
-                {field: 'name', width: 90, title: '姓名'},
-                {field: 'sex', width: 90, title: '性别', sort: true},
-                {field: 'phoneNumber', width: 120, title: '联系方式'},
-                {field: 'address', width: 190, title: '家庭住址'},
-                {title: '各科成绩', minwidth: 90, toolbar: '#studentGrade', align: "center"},
-                {title: '获奖情况', minwidth: 90, toolbar: '#studentPrize', align: "center"},
-                {title: '企业实践活动', minwidth: 90, toolbar: '#studentBusinessPractice', fixed: "right", align: "center"},
-                {title: '论文情况', minwidth: 100, toolbar: '#studentThesis', fixed: "right", align: "center"},
-                {title: '项目成果', minwidth: 100, toolbar: '#studentAchievement', fixed: "right", align: "center"},
-                {title: '科技成果', minwidth: 100, toolbar: '#studentSTAward', fixed: "right", align: "center"},
-                {title: '专利授权', minwidth: 100, toolbar: '#studentPatent', fixed: "right", align: "center"},
-                {title: '操作', minwidth: 100, toolbar: '#currentTableBar', fixed: "right", align: "center"}
+                {field: 'name', width: 90, title: '姓名',templet: function(data){
+                        if(key !== "" && data.name.indexOf(key) !== -1 )
+                            return '<span style="color: deepskyblue; ">'+data.name+'</span>';
+                        else
+                            return data.name;
+                    }},
+                {field: 'sex', width: 90, title: '性别', sort: true,templet: function(data){
+                        if(key !== "" && data.sex.indexOf(key) !== -1 )
+                            return '<span style="color: deepskyblue; ">'+data.sex+'</span>';
+                        else
+                            return data.sex;
+                    }},
+                {field: 'phoneNumber', width: 120, title: '联系方式',templet: function(data){
+                        if(key !== "" && data.phoneNumber.indexOf(key) !== -1 )
+                            return '<span style="color: deepskyblue; ">'+data.phoneNumber+'</span>';
+                        else
+                            return data.phoneNumber;
+                    }},
+                {field: 'address', width: 190, title: '家庭住址'
+                    ,templet: function(data){
+                        if(key !== "" && data.address.indexOf(key) !== -1 )
+                            return '<span style="color: deepskyblue; ">'+data.address+'</span>';
+                        else
+                            return data.address;
+                    }},
+                {field: 'grade', width: 120, title: '各科成绩', align:"center"
+                    ,templet: function(data){
+                    if(key !== "" && data.grade.indexOf(key) !== -1 )
+                        return '<a class="layui-btn layui-btn-xs layui-btn-normal data-count-edit" lay-event="lookGrade">查看</a>';
+                    else
+                        return '<a class="layui-btn layui-btn-xs data-count-edit" lay-event="lookGrade">查看</a>';
+                    }},
+                {field: 'prize', width: 120, title: '获奖情况', align:"center"
+                    ,templet: function(data){
+                        if(key !== "" && data.prize.indexOf(key) !== -1 )
+                            return '<a class="layui-btn layui-btn-xs layui-btn-normal data-count-edit" lay-event="lookPrize">查看</a>';
+                        else
+                            return '<a class="layui-btn layui-btn-xs data-count-edit" lay-event="lookPrize">查看</a>';
+                    }},
+                {field: 'businessPractice', width: 120, title: '企业实践活动', align:"center"
+                    ,templet: function(data){
+                        if(key !== "" && data.businessPractice.indexOf(key) !== -1 )
+                            return '<a class="layui-btn layui-btn-xs layui-btn-normal data-count-edit" lay-event="lookBusinessPractice">查看</a>';
+                        else
+                            return '<a class="layui-btn layui-btn-xs data-count-edit" lay-event="lookBusinessPractice">查看</a>';
+                    }},
+                {field: 'thesis', width: 120, title: '论文情况', align:"center"
+                    ,templet: function(data){
+                        if(key !== "" && data.thesis.indexOf(key) !== -1 )
+                            return '<a class="layui-btn layui-btn-xs layui-btn-normal data-count-edit" lay-event="lookThesis">查看</a>';
+                        else
+                            return '<a class="layui-btn layui-btn-xs data-count-edit" lay-event="lookThesis">查看</a>';
+                    }},
+                {field: 'projectAchievement', width: 120, title: '项目成果', align:"center"
+                    ,templet: function(data){
+                        if(key !== "" && data.projectAchievement.indexOf(key) !== -1 )
+                            return '<a class="layui-btn layui-btn-xs layui-btn-normal data-count-edit" lay-event="lookAchievement">查看</a>';
+                        else
+                            return '<a class="layui-btn layui-btn-xs data-count-edit" lay-event="lookAchievement">查看</a>';
+                    }},
+                {field: 'scienceTechnologyAchievementAward', width: 120, title: '科技成果', align:"center"
+                    ,templet: function(data){
+                        if(key !== "" && data.scienceTechnologyAchievementAward.indexOf(key) !== -1 )
+                            return '<a class="layui-btn layui-btn-xs layui-btn-normal data-count-edit" lay-event="lookSTAward">查看</a>';
+                        else
+                            return '<a class="layui-btn layui-btn-xs data-count-edit" lay-event="lookSTAward">查看</a>';
+                    }},
+                {field: 'patentAuthorization', width: 120, title: '专利授权', align:"center"
+                    ,templet: function(data){
+                        if(key !== "" && data.patentAuthorization.indexOf(key) !== -1 )
+                            return '<a class="layui-btn layui-btn-xs layui-btn-normal data-count-edit" lay-event="lookPatent">查看</a>';
+                        else
+                            return '<a class="layui-btn layui-btn-xs data-count-edit" lay-event="lookPatent">查看</a>';
+                    }},
+                {title: '操作', width: 150, toolbar: '#currentTableBar', fixed: "right", align: "center"}
             ]],
             limits: [10, 15, 20, 25, 50, 100],
             limit: 15,
@@ -127,21 +156,20 @@
 
         // 监听搜索操作
         form.on('submit(data-search-btn)', function (data) {
-            var result = JSON.stringify(data.field);
-            layer.alert(result, {
-                title: '最终的搜索信息'
-            });
-
+            key = data.field.key;
+            key = key.trim();
+            let url = '/student/queryAllStudents';
+            if(key !== ""){
+                url += '?key=';
+                url += key;
+            }
             //执行搜索重载
             table.reload('studentTableId', {
+                url: url,
                 page: {
                     curr: 1
                 }
-                , where: {
-                    searchParams: result
-                }
             }, 'data');
-
             return false;
         });
 
@@ -153,7 +181,7 @@
             if (obj.event === 'lookGrade') {
                 url = 'grade.html';
                 layer.open({
-                    title: '<font color="red">'+name+'</font>' + '&nbsp;的成绩',
+                    title: '<span style="color: red; ">'+name+'</span>' + '&nbsp;的成绩',
                     type: 2,
                     shade: 0.2,
                     maxmin:true,
@@ -164,7 +192,7 @@
             } else if (obj.event === 'lookPrize') {
                 url = 'prize.html';
                 layer.open({
-                    title: '<font color="red">'+name+'</font>' + '&nbsp;的获奖情况',
+                    title: '<span style="color: red; ">'+name+'</span>' + '&nbsp;的获奖情况',
                     type: 2,
                     shade: 0.2,
                     maxmin:true,
@@ -175,7 +203,7 @@
             } else if (obj.event === 'lookBusinessPractice') {
                 url = 'business_practice.html';
                 layer.open({
-                    title: '<font color="red">'+name+'</font>' + '&nbsp;的企业实践活动',
+                    title: '<span style="color: red; ">'+name+'</span>' + '&nbsp;的企业实践活动',
                     type: 2,
                     shade: 0.2,
                     maxmin:true,
@@ -187,7 +215,7 @@
                 sessionStorage.setItem(TYPE_ST, TYPE_S);
                 url = '../thesis.html';
                 layer.open({
-                    title: '<font color="red">'+name+'</font>' + '&nbsp;的发表论文情况',
+                    title: '<span style="color: red; ">'+name+'</span>' + '&nbsp;的发表论文情况',
                     type: 2,
                     shade: 0.2,
                     maxmin:true,
@@ -199,7 +227,7 @@
                 sessionStorage.setItem(TYPE_ST, TYPE_S);
                 url = '../project_achievement.html';
                 layer.open({
-                    title: '<font color="red">'+name+'</font>' + '&nbsp;的项目成果',
+                    title: '<span style="color: red; ">'+name+'</span>' + '&nbsp;的项目成果',
                     type: 2,
                     shade: 0.2,
                     maxmin:true,
@@ -211,7 +239,7 @@
                 sessionStorage.setItem(TYPE_ST, TYPE_S);
                 url = '../s_t_award.html';
                 layer.open({
-                    title: '<font color="red">'+name+'</font>' + '&nbsp;的科技成果',
+                    title: '<span style="color: red; ">'+name+'</span>' + '&nbsp;的科技成果',
                     type: 2,
                     shade: 0.2,
                     maxmin:true,
@@ -223,7 +251,7 @@
                 sessionStorage.setItem(TYPE_ST, TYPE_S);
                 url = '../patent_authorization.html';
                 layer.open({
-                    title: '<font color="red">'+name+'</font>' + '&nbsp;的专利授权',
+                    title: '<span style="color: red; ">'+name+'</span>' + '&nbsp;的专利授权',
                     type: 2,
                     shade: 0.2,
                     maxmin:true,

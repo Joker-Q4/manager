@@ -1,20 +1,18 @@
 package com.sau.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.sau.entity.IndustryExperience;
-import com.sau.entity.Teacher;
-import com.sau.entity.TeachingSituation;
+import com.sau.entity.*;
 import com.sau.global.Global;
 import com.sau.global.GlobalKey;
 import com.sau.global.JsonTools;
-import com.sau.service.ExperienceService;
-import com.sau.service.SituationService;
-import com.sau.service.TeacherService;
+import com.sau.service.*;
+import com.sau.utils.KMPUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -25,18 +23,47 @@ public class TeacherController {
 
     @Resource
     TeacherService teacherService;
+    @Resource
+    SituationService situationService;
+    @Resource
+    ExperienceService experienceService;
+    @Resource
+    ThesisService thesisService;
+    @Resource
+    ProjectAchievementService projectAchievementService;
+    @Resource
+    STAwardService stAwardService;
+    @Resource
+    PatentAuthorizationService patentAuthorizationService;
 
     @GetMapping("/queryTeachers")
-    public Map<String, Object> queryTeachers(@RequestParam(defaultValue = "") String id){
-        if(id.isEmpty()){
+    public Map<String, Object> queryTeachers(
+            @RequestParam(defaultValue = "") String id,
+            @RequestParam(defaultValue = "") String key
+    ){
+        if(key.isEmpty()){
+            if(id.isEmpty()){
+                final List<Teacher> teachers = teacherService.getAllTeachers();
+                return JsonTools.toResult(0, "success", teachers.size(), teachers);
+            }
+            Teacher teacher = teacherService.getTeacherById(Integer.valueOf(id));
+            if(teacher != null)
+                return JsonTools.toResult(0, "success", 1, teacher);
+            else
+                return JsonTools.toResult(0, "success", 0, null);
+        }else{
             final List<Teacher> teachers = teacherService.getAllTeachers();
-            return JsonTools.toResult(0, "success", teachers.size(), teachers);
+            final List<Teacher> result = new ArrayList<>();
+            for(Teacher teacher: teachers){
+                setProperty(teacher, teacher.getId());
+                int[] temp = KMPUtils.kmpNext(key);
+                if(KMPUtils.kmpSearch(teacher.getString(), key, temp) != -1){
+                    //说明存在
+                    result.add(teacher);
+                }
+            }
+            return JsonTools.toResult(0, "success", result.size(), result);
         }
-        Teacher teacher = teacherService.getTeacherById(Integer.valueOf(id));
-        if(teacher != null)
-            return JsonTools.toResult(0, "success", 1, teacher);
-        else
-            return JsonTools.toResult(0, "success", 0, null);
     }
 
     @PostMapping("/deleteTeachers")
@@ -125,5 +152,50 @@ public class TeacherController {
             teacher.setTitle(title);
         }
         return teacher;
+    }
+
+    private void setProperty(Teacher teacher, int id){
+        //授课情况
+        List<TeachingSituation> situationList = situationService.getSituationByTeacherId(id);
+        StringBuilder prizeString = new StringBuilder();
+        for(TeachingSituation teachingSituation: situationList){
+            prizeString.append(teachingSituation.getString());
+        }
+        teacher.setTeachingSituation(prizeString.toString());
+        //行业实践经历
+        List<IndustryExperience> experienceList = experienceService.getExperienceByTeacherId(id);
+        StringBuilder practiceString = new StringBuilder();
+        for(IndustryExperience industryExperience: experienceList){
+            practiceString.append(industryExperience.getString());
+        }
+        teacher.setIndustryExperience(practiceString.toString());
+        //论文情况
+        List<Thesis> thesisList = thesisService.getThesisByTeacherId(id);
+        StringBuilder thesisString = new StringBuilder();
+        for(Thesis thesis: thesisList){
+            thesisString.append(thesis.getString());
+        }
+        teacher.setThesis(thesisString.toString());
+        //项目成果
+        List<ProjectAchievement> achievementList = projectAchievementService.findAchievementByTeacherId(id);
+        StringBuilder achievementString = new StringBuilder();
+        for(ProjectAchievement projectAchievement: achievementList){
+            achievementString.append(projectAchievement.getString());
+        }
+        teacher.setProjectAchievement(achievementString.toString());
+        //科技成果
+        List<ScienceTechnologyAchievementAward> STAAList = stAwardService.findSTAwardByTeacherId(id);
+        StringBuilder STAAString = new StringBuilder();
+        for(ScienceTechnologyAchievementAward scienceTechnologyAchievementAward: STAAList){
+            STAAString.append(scienceTechnologyAchievementAward.getString());
+        }
+        teacher.setScienceTechnologyAchievementAward(STAAString.toString());
+        //专利授权
+        List<PatentAuthorization> patentList = patentAuthorizationService.findAuthorizationByTeacherId(id);
+        StringBuilder patentString = new StringBuilder();
+        for(PatentAuthorization patentAuthorization: patentList){
+            patentString.append(patentAuthorization.getString());
+        }
+        teacher.setPatentAuthorization(patentString.toString());
     }
 }

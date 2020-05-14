@@ -8,6 +8,21 @@ public class Student {
     private String phoneNumber;
     private String address;
 
+    //各科成绩
+    private String grade;
+    //获奖情况
+    private String prize;
+    //企业实践活动
+    private String businessPractice;
+    //论文情况
+    private String thesis;
+    //项目成果
+    private String projectAchievement;
+    //科技成果
+    private String scienceTechnologyAchievementAward;
+    //专利授权
+    private String patentAuthorization;
+
     public Integer getId() {
         return id;
     }
@@ -48,6 +63,62 @@ public class Student {
         this.address = address;
     }
 
+    public String getGrade() {
+        return grade;
+    }
+
+    public void setGrade(String grade) {
+        this.grade = grade;
+    }
+
+    public String getPrize() {
+        return prize;
+    }
+
+    public void setPrize(String prize) {
+        this.prize = prize;
+    }
+
+    public String getThesis() {
+        return thesis;
+    }
+
+    public void setThesis(String thesis) {
+        this.thesis = thesis;
+    }
+
+    public String getProjectAchievement() {
+        return projectAchievement;
+    }
+
+    public void setProjectAchievement(String projectAchievement) {
+        this.projectAchievement = projectAchievement;
+    }
+
+    public String getScienceTechnologyAchievementAward() {
+        return scienceTechnologyAchievementAward;
+    }
+
+    public void setScienceTechnologyAchievementAward(String scienceTechnologyAchievementAward) {
+        this.scienceTechnologyAchievementAward = scienceTechnologyAchievementAward;
+    }
+
+    public String getBusinessPractice() {
+        return businessPractice;
+    }
+
+    public void setBusinessPractice(String businessPractice) {
+        this.businessPractice = businessPractice;
+    }
+
+    public String getPatentAuthorization() {
+        return patentAuthorization;
+    }
+
+    public void setPatentAuthorization(String patentAuthorization) {
+        this.patentAuthorization = patentAuthorization;
+    }
+
     @Override
     public String toString() {
         return "Student{" +
@@ -57,5 +128,20 @@ public class Student {
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", address='" + address + '\'' +
                 '}';
+    }
+
+    public String getString(){
+        return id + " " +
+                name + " " +
+                sex + " " +
+                phoneNumber + " " +
+                address + " " +
+                grade + " " +
+                prize + " " +
+                thesis + " " +
+                projectAchievement + " " +
+                scienceTechnologyAchievementAward + " " +
+                businessPractice + " " +
+                patentAuthorization;
     }
 }

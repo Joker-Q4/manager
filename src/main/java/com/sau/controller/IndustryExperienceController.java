@@ -6,6 +6,7 @@ import com.sau.global.Global;
 import com.sau.global.GlobalKey;
 import com.sau.global.JsonTools;
 import com.sau.service.ExperienceService;
+import com.sau.utils.KMPUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -13,10 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 @RestController
 @RequestMapping("/experience")
@@ -26,12 +24,31 @@ public class IndustryExperienceController {
     ExperienceService experienceService;
 
     @GetMapping("/getExperienceByTeacherId")
-    public Map<String, Object> getExperienceByTeacherId(@RequestParam(defaultValue = "") String teacherId){
-        if(teacherId.isEmpty()){
-            return JsonTools.toResult(1, "参数有误", 0, null);
+    public Map<String, Object> getExperienceByTeacherId(
+            @RequestParam(defaultValue = "") String teacherId,
+            @RequestParam(defaultValue = "") String key
+    ){
+        if(key.isEmpty()){
+            if(teacherId.isEmpty()){
+                return JsonTools.toResult(1, "参数有误", 0, null);
+            }
+            final List<IndustryExperience> list = experienceService.getExperienceByTeacherId(Integer.valueOf(teacherId));
+            return JsonTools.toResult(0, "success", list.size(), list);
+        }else{
+            if(teacherId.isEmpty()){
+                return JsonTools.toResult(1, "参数有误", 0, null);
+            }
+            final List<IndustryExperience> list = experienceService.getExperienceByTeacherId(Integer.valueOf(teacherId));
+            final List<IndustryExperience> result = new ArrayList<>();
+            for(IndustryExperience industryExperience: list){
+                int[] temp = KMPUtils.kmpNext(key);
+                if(KMPUtils.kmpSearch(industryExperience.getString(), key, temp) != -1){
+                    //说明存在
+                    result.add(industryExperience);
+                }
+            }
+            return JsonTools.toResult(0, "成功", result.size(), result);
         }
-        final List<IndustryExperience> list = experienceService.getExperienceByTeacherId(Integer.valueOf(teacherId));
-        return JsonTools.toResult(0, "success", list.size(), list);
     }
 
     @PostMapping("/deleteExperiences")

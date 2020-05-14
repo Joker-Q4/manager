@@ -19,9 +19,9 @@
                 <form class="layui-form layui-form-pane" action="">
                     <div class="layui-form-item">
                         <div class="layui-inline">
-                            <label class="layui-form-label">用户姓名</label>
+                            <label class="layui-form-label">关键字</label>
                             <div class="layui-input-inline">
-                                <input type="text" name="username" autocomplete="off" class="layui-input">
+                                <input type="text" name="key" autocomplete="off" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-inline">
@@ -46,34 +46,6 @@
             <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
         </script>
 
-        <script type="text/html" id="teachingSituation">
-            <a class="layui-btn layui-btn-xs data-count-edit" lay-event="lookSituation">查看</a>
-        </script>
-
-        <script type="text/html" id="industryExperience">
-            <a class="layui-btn layui-btn-xs data-count-edit" lay-event="lookExperience">查看</a>
-        </script>
-
-        <!-- 发表论文情况 -->
-        <script type="text/html" id="teacherThesis">
-            <a class="layui-btn layui-btn-xs data-count-edit" lay-event="lookThesis">查看</a>
-        </script>
-
-        <!-- 项目成果 -->
-        <script type="text/html" id="teacherAchievement">
-            <a class="layui-btn layui-btn-xs data-count-edit" lay-event="lookAchievement">查看</a>
-        </script>
-
-        <!-- 科技成果 -->
-        <script type="text/html" id="teacherSTAward">
-            <a class="layui-btn layui-btn-xs data-count-edit" lay-event="lookSTAward">查看</a>
-        </script>
-
-        <!-- 专利授权 -->
-        <script type="text/html" id="teacherPatent">
-            <a class="layui-btn layui-btn-xs data-count-edit" lay-event="lookPatent">查看</a>
-        </script>
-
     </div>
 </div>
 <script src="../../lib/layui-v2.5.5/layui.js" charset="utf-8"></script>
@@ -82,6 +54,7 @@
 <script>
 
     var global_table;
+    var key = "";
     layui.use(['form', 'table', 'element'], function () {
         var $ = layui.jquery,
             form = layui.form,
@@ -101,19 +74,91 @@
             cols: [[
                 {type: "checkbox", width: 50, fixed: "left"},
                 {field: 'id', width: 80, title: 'ID', sort: true, hide: true},
-                {field: 'name', width: 80, title: '姓名'},
-                {field: 'sex', width: 80, title: '性别', sort: true},
-                {field: 'phoneNumber', width: 120, title: '联系方式'},
-                {field: 'address', width: 180, title: '家庭住址'},
-                {field: 'academicDegree', width: 120, title: '学位'},
-                {field: 'title', width: 120, title: '职称'},
-                {title: '授课情况', minwidth: 100, toolbar: '#teachingSituation', align: "center"},
-                {title: '行业经验', minwidth: 100, toolbar: '#industryExperience', fixed: "right", align: "center"},
-                {title: '论文情况', minwidth: 100, toolbar: '#teacherThesis', fixed: "right", align: "center"},
-                {title: '项目成果', minwidth: 100, toolbar: '#teacherAchievement', fixed: "right", align: "center"},
-                {title: '科技成果', minwidth: 100, toolbar: '#teacherSTAward', fixed: "right", align: "center"},
-                {title: '专利授权', minwidth: 100, toolbar: '#teacherPatent', fixed: "right", align: "center"},
-                {title: '操作', minwidth: 100, toolbar: '#currentTableBar', fixed: "right", align: "center"}
+                {field: 'name', width: 80, title: '姓名'
+                    ,templet: function(data){
+                        if(key !== "" && data.name.indexOf(key) !== -1 )
+                            return '<span style="color: deepskyblue; ">'+data.name+'</span>';
+                        else
+                            return data.name;
+                    }},
+                {field: 'sex', width: 80, title: '性别', sort: true
+                    ,templet: function(data){
+                        if(key !== "" && data.sex.indexOf(key) !== -1 )
+                            return '<span style="color: deepskyblue; ">'+data.sex+'</span>';
+                        else
+                            return data.sex;
+                    }},
+                {field: 'phoneNumber', width: 120, title: '联系方式'
+                    ,templet: function(data){
+                        if(key !== "" && data.phoneNumber.indexOf(key) !== -1 )
+                            return '<span style="color: deepskyblue; ">'+data.phoneNumber+'</span>';
+                        else
+                            return data.phoneNumber;
+                    }},
+                {field: 'address', width: 180, title: '家庭住址'
+                    ,templet: function(data){
+                        if(key !== "" && data.address.indexOf(key) !== -1 )
+                            return '<span style="color: deepskyblue; ">'+data.address+'</span>';
+                        else
+                            return data.address;
+                    }},
+                {field: 'academicDegree', width: 120, title: '学位'
+                    ,templet: function(data){
+                        if(key !== "" && data.academicDegree.indexOf(key) !== -1 )
+                            return '<span style="color: deepskyblue; ">'+data.academicDegree+'</span>';
+                        else
+                            return data.academicDegree;
+                    }},
+                {field: 'title', width: 120, title: '职称'
+                    ,templet: function(data){
+                        if(key !== "" && data.title.indexOf(key) !== -1 )
+                            return '<span style="color: deepskyblue; ">'+data.title+'</span>';
+                        else
+                            return data.title;
+                    }},
+                {field: 'title', width: 120, title: '授课情况'
+                    ,templet: function(data){
+                        if(key !== "" && data.patentAuthorization.indexOf(key) !== -1 )
+                            return '<a class="layui-btn layui-btn-xs layui-btn-normal data-count-edit" lay-event="lookSituation">查看</a>';
+                        else
+                            return '<a class="layui-btn layui-btn-xs data-count-edit" lay-event="lookSituation">查看</a>';
+                    }},
+                {field: 'title', width: 120, title: '行业经验'
+                    ,templet: function(data){
+                        if(key !== "" && data.patentAuthorization.indexOf(key) !== -1 )
+                            return '<a class="layui-btn layui-btn-xs layui-btn-normal data-count-edit" lay-event="lookExperience">查看</a>';
+                        else
+                            return '<a class="layui-btn layui-btn-xs data-count-edit" lay-event="lookExperience">查看</a>';
+                    }},
+                {field: 'thesis', width: 120, title: '论文情况', align:"center"
+                    ,templet: function(data){
+                        if(key !== "" && data.thesis.indexOf(key) !== -1 )
+                            return '<a class="layui-btn layui-btn-xs layui-btn-normal data-count-edit" lay-event="lookThesis">查看</a>';
+                        else
+                            return '<a class="layui-btn layui-btn-xs data-count-edit" lay-event="lookThesis">查看</a>';
+                    }},
+                {field: 'projectAchievement', width: 120, title: '项目成果', align:"center"
+                    ,templet: function(data){
+                        if(key !== "" && data.projectAchievement.indexOf(key) !== -1 )
+                            return '<a class="layui-btn layui-btn-xs layui-btn-normal data-count-edit" lay-event="lookAchievement">查看</a>';
+                        else
+                            return '<a class="layui-btn layui-btn-xs data-count-edit" lay-event="lookAchievement">查看</a>';
+                    }},
+                {field: 'scienceTechnologyAchievementAward', width: 120, title: '科技成果', align:"center"
+                    ,templet: function(data){
+                        if(key !== "" && data.scienceTechnologyAchievementAward.indexOf(key) !== -1 )
+                            return '<a class="layui-btn layui-btn-xs layui-btn-normal data-count-edit" lay-event="lookSTAward">查看</a>';
+                        else
+                            return '<a class="layui-btn layui-btn-xs data-count-edit" lay-event="lookSTAward">查看</a>';
+                    }},
+                {field: 'patentAuthorization', width: 120, title: '专利授权', align:"center"
+                    ,templet: function(data){
+                        if(key !== "" && data.patentAuthorization.indexOf(key) !== -1 )
+                            return '<a class="layui-btn layui-btn-xs layui-btn-normal data-count-edit" lay-event="lookPatent">查看</a>';
+                        else
+                            return '<a class="layui-btn layui-btn-xs data-count-edit" lay-event="lookPatent">查看</a>';
+                    }},
+                {title: '操作', width: 150, toolbar: '#currentTableBar', fixed: "right", align: "center"}
             ]],
             limits: [10, 15, 20, 25, 50, 100],
             limit: 15,
@@ -122,12 +167,20 @@
 
         // 监听搜索操作
         form.on('submit(data-search-btn)', function (data) {
-            var result = JSON.stringify(data.field);
-            layer.alert(result, {
-                title: '最终的搜索信息'
-            });
+            key = data.field.key;
+            key = key.trim();
+            let url = '/teacher/queryTeachers';
+            if(key !== ""){
+                url += '?key=';
+                url += key;
+            }
             //执行搜索重载
-            reloadTable();
+            table.reload('teacherTableId', {
+                url: url,
+                page: {
+                    curr: 1
+                }
+            }, 'data');
             return false;
         });
 

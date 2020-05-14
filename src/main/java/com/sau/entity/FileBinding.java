@@ -34,4 +34,10 @@ public class FileBinding {
     public void setPath(String path) {
         this.path = path;
     }
+
+    public String getString(){
+        return id + " " +
+                name + " " +
+                path;
+    }
 }

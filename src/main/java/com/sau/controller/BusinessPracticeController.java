@@ -6,11 +6,13 @@ import com.sau.global.Global;
 import com.sau.global.GlobalKey;
 import com.sau.global.JsonTools;
 import com.sau.service.BusinessPracticeService;
+import com.sau.utils.KMPUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -23,12 +25,31 @@ public class BusinessPracticeController {
     BusinessPracticeService businessPracticeService;
 
     @GetMapping("/getPracticeByStudentId")
-    public Map<String, Object> getPracticeByStudentId(@RequestParam(defaultValue = "") String studentId){
-        if(studentId.isEmpty()){
-            return JsonTools.toResult(1, "参数有误", 0, null);
+    public Map<String, Object> getPracticeByStudentId(
+            @RequestParam(defaultValue = "") String studentId,
+            @RequestParam(defaultValue = "") String key
+    ){
+        if(key.isEmpty()){
+            if(studentId.isEmpty()){
+                return JsonTools.toResult(1, "参数有误", 0, null);
+            }
+            final List<BusinessPractice> list = businessPracticeService.getPracticeByStudentId(Integer.valueOf(studentId));
+            return JsonTools.toResult(0, "success", list.size(), list);
+        }else {
+            if(studentId.isEmpty()){
+                return JsonTools.toResult(1, "参数有误", 0, null);
+            }
+            final List<BusinessPractice> list = businessPracticeService.getPracticeByStudentId(Integer.valueOf(studentId));
+            final List<BusinessPractice> result = new ArrayList<>();
+            for(BusinessPractice businessPractice: list){
+                int[] temp = KMPUtils.kmpNext(key);
+                if(KMPUtils.kmpSearch(businessPractice.getString(), key, temp) != -1){
+                    //说明存在
+                    result.add(businessPractice);
+                }
+            }
+            return JsonTools.toResult(0, "成功", result.size(), result);
         }
-        final List<BusinessPractice> list = businessPracticeService.getPracticeByStudentId(Integer.valueOf(studentId));
-        return JsonTools.toResult(0, "success", list.size(), list);
     }
 
     @PostMapping("/updatePractice")

@@ -6,6 +6,7 @@ public class CommonEntity {
 
     private Integer id;
     private String name;
+    private String title;
     private String description;
     private Integer fileId;
     private Integer studentId;
@@ -28,6 +29,14 @@ public class CommonEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getDescription() {
@@ -84,5 +93,32 @@ public class CommonEntity {
 
     public void setCreateTime(Timestamp createTime) {
         this.createTime = createTime;
+    }
+
+    @Override
+    public String toString() {
+        return "CommonEntity{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", fileId=" + fileId +
+                ", studentId=" + studentId +
+                ", student=" + student +
+                ", teacherId=" + teacherId +
+                ", teacher=" + teacher +
+                ", createTime=" + createTime +
+                '}';
+    }
+
+    public String getString(){
+        return id + " " +
+                name + " " +
+                description + " " +
+                fileId + " " +
+                studentId + " " +
+                student + " " +
+                teacherId + " " +
+                teacher + " " +
+                createTime;
     }
 }

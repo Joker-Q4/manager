@@ -83,4 +83,14 @@ public class IndustryExperience {
                 ", teacher=" + teacher +
                 '}';
     }
+
+    public String getString(){
+        return id + " " +
+                title + " " +
+                description + " " +
+                time + " " +
+                location + " " +
+                teacherId + " " +
+                teacher;
+    }
 }

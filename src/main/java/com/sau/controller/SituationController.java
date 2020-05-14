@@ -6,11 +6,13 @@ import com.sau.global.Global;
 import com.sau.global.GlobalKey;
 import com.sau.global.JsonTools;
 import com.sau.service.SituationService;
+import com.sau.utils.KMPUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -23,12 +25,31 @@ public class SituationController {
     SituationService situationService;
 
     @GetMapping("/getSituationByTeacherId")
-    public Map<String, Object> getSituationByTeacherId(@RequestParam(defaultValue = "") String teacherId){
-        if(teacherId.isEmpty()){
-            return JsonTools.toResult(1, "参数有误", 0, null);
+    public Map<String, Object> getSituationByTeacherId(
+            @RequestParam(defaultValue = "") String teacherId,
+            @RequestParam(defaultValue = "") String key
+    ){
+        if(key.isEmpty()){
+            if(teacherId.isEmpty()){
+                return JsonTools.toResult(1, "参数有误", 0, null);
+            }
+            final List<TeachingSituation> list = situationService.getSituationByTeacherId(Integer.valueOf(teacherId));
+            return JsonTools.toResult(0, "success", list.size(), list);
+        }else{
+            if(teacherId.isEmpty()){
+                return JsonTools.toResult(1, "参数有误", 0, null);
+            }
+            final List<TeachingSituation> list = situationService.getSituationByTeacherId(Integer.valueOf(teacherId));
+            final List<TeachingSituation> result = new ArrayList<>();
+            for(TeachingSituation teachingSituation: list){
+                int[] temp = KMPUtils.kmpNext(key);
+                if(KMPUtils.kmpSearch(teachingSituation.getString(), key, temp) != -1){
+                    //说明存在
+                    result.add(teachingSituation);
+                }
+            }
+            return JsonTools.toResult(0, "成功", result.size(), result);
         }
-        final List<TeachingSituation> list = situationService.getSituationByTeacherId(Integer.valueOf(teacherId));
-        return JsonTools.toResult(0, "success", list.size(), list);
     }
 
     @PostMapping("/addSituation")

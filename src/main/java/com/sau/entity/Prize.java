@@ -73,4 +73,13 @@ public class Prize {
                 ", student=" + student +
                 '}';
     }
+
+    public String getString(){
+        return id + " " +
+                name + " " +
+                description + " " +
+                createTime + " " +
+                studentId + " " +
+                student;
+    }
 }
