@@ -59,11 +59,16 @@
             table = layui.table;
 
         global_table = table;
+        var keyParam = UrlParm.parm("key");
+        var $_input_key = $("input[name='key']");
+        if(keyParam){
+            $_input_key.val(keyParam);
+        }
         var teacherId = sessionStorage.getItem(TEACHER_ID);
 
         table.render({
             elem: '#SituationTable',
-            url: '/situation/getSituationByTeacherId?teacherId='+teacherId,
+            url: '/situation/getSituationByTeacherId?teacherId='+teacherId+"&key="+$_input_key.val(),
             toolbar: '#toolbarSituation',
             defaultToolbar: ['filter', 'exports', 'print', {
                 title: '提示',

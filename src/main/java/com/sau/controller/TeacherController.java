@@ -2,6 +2,7 @@ package com.sau.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.sau.entity.*;
+import com.sau.entity.vo.TeacherVO;
 import com.sau.global.Global;
 import com.sau.global.GlobalKey;
 import com.sau.global.JsonTools;
@@ -44,17 +45,22 @@ public class TeacherController {
         if(key.isEmpty()){
             if(id.isEmpty()){
                 final List<Teacher> teachers = teacherService.getAllTeachers();
+                for(Teacher teacher: teachers){
+                    setVO(teacher);
+                }
                 return JsonTools.toResult(0, "success", teachers.size(), teachers);
             }
             Teacher teacher = teacherService.getTeacherById(Integer.valueOf(id));
-            if(teacher != null)
+            if(teacher != null){
+                setVO(teacher);
                 return JsonTools.toResult(0, "success", 1, teacher);
-            else
+            }else
                 return JsonTools.toResult(0, "success", 0, null);
         }else{
             final List<Teacher> teachers = teacherService.getAllTeachers();
             final List<Teacher> result = new ArrayList<>();
             for(Teacher teacher: teachers){
+                setVO(teacher);
                 setProperty(teacher, teacher.getId());
                 int[] temp = KMPUtils.kmpNext(key);
                 if(KMPUtils.kmpSearch(teacher.getString(), key, temp) != -1){
@@ -154,7 +160,22 @@ public class TeacherController {
         return teacher;
     }
 
+    private void setVO(Teacher teacher){
+        TeacherVO vo = new TeacherVO();
+        vo.setId(teacher.getId());
+        vo.setSn(teacher.getSn());
+        vo.setName(teacher.getName());
+        vo.setSex(teacher.getSex());
+        vo.setPhoneNumber(teacher.getPhoneNumber());
+        vo.setAddress(teacher.getAddress());
+        vo.setTitle(teacher.getTitle());
+        vo.setAcademicDegree(teacher.getAcademicDegree());
+        teacher.setTeacherVO(vo);
+    }
+
     private void setProperty(Teacher teacher, int id){
+        //基本情况
+        teacher.setBase(teacher.getTeacherVO().getString());
         //授课情况
         List<TeachingSituation> situationList = situationService.getSituationByTeacherId(id);
         StringBuilder prizeString = new StringBuilder();

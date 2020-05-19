@@ -57,11 +57,16 @@
 
         global_table = table;
 
+        var keyParam = UrlParm.parm("key");
+        var $_input_key = $("input[name='key']");
+        if(keyParam){
+            $_input_key.val(keyParam);
+        }
         var studentId = sessionStorage.getItem(STUDENT_ID);
 
         table.render({
             elem: '#BusinessPracticeTable',
-            url: '/businessPractice/getPracticeByStudentId?studentId='+studentId,
+            url: '/businessPractice/getPracticeByStudentId?studentId='+studentId+"&key="+$_input_key.val(),
             toolbar: '#toolbarSituation',
             defaultToolbar: ['filter', 'exports', 'print', {
                 title: '提示',

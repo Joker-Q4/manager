@@ -64,6 +64,12 @@
             table = layui.table;
 
         global_table = table;
+        var keyParam = UrlParm.parm("key");
+        var $_input_key = $("input[name='key']");
+        if(keyParam){
+            $_input_key.val(keyParam);
+        }
+
         var id;
         var url = '/patentAuthorization';
         var type = sessionStorage.getItem(TYPE_ST);
@@ -74,6 +80,8 @@
             id = sessionStorage.getItem(TEACHER_ID);
             url += '/getAuthorizationByTeacherId?teacherId=' + id;
         }
+
+        url += "&key="+$_input_key.val();
 
         table.render({
             elem: '#AchievementTable',

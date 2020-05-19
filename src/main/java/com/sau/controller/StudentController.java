@@ -2,13 +2,12 @@ package com.sau.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.sau.entity.*;
+import com.sau.entity.vo.StudentVO;
 import com.sau.global.Global;
 import com.sau.global.GlobalKey;
 import com.sau.global.JsonTools;
 import com.sau.service.*;
 import com.sau.utils.KMPUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -40,7 +39,7 @@ public class StudentController {
     @Resource
     PatentAuthorizationService patentAuthorizationService;
 
-    private static final Logger logger = LoggerFactory.getLogger(StudentController.class);
+  //  private static final Logger logger = LoggerFactory.getLogger(StudentController.class);
 
     @GetMapping("/queryAllStudents")
     public Map<String, Object> queryAllStudents(
@@ -50,18 +49,23 @@ public class StudentController {
         if(key.isEmpty()){
             if(studentId.isEmpty()){
                 final List<Student> students = studentService.getAllStudents();
+                for(Student student: students){
+                    setVO(student);
+                }
                 return JsonTools.toResult(0, "成功", students.size(), students);
             }
             Student student = studentService.getStudentById(Integer.valueOf(studentId));
-            if(student != null)
+            if(student != null){
+                setVO(student);
                 return JsonTools.toResult(0, "成功", 1, student);
-            else
+            }else
                 return JsonTools.toResult(0, "成功", 0, null);
         }else {
             final List<Student> students = studentService.getAllStudents();
             final List<Student> result = new ArrayList<>();
             for(Student student: students){
                 Integer id = student.getId();
+                setVO(student);
                 setProperty(student, id);
                 int[] temp = KMPUtils.kmpNext(key);
                 if(KMPUtils.kmpSearch(student.getString(), key, temp) != -1){
@@ -152,7 +156,20 @@ public class StudentController {
         return student;
     }
 
+    private void setVO(Student student){
+        StudentVO vo = new StudentVO();
+        vo.setId(student.getId());
+        vo.setSn(student.getSn());
+        vo.setName(student.getName());
+        vo.setSex(student.getSex());
+        vo.setPhoneNumber(student.getPhoneNumber());
+        vo.setAddress(student.getAddress());
+        student.setStudentVO(vo);
+    }
+
     private void setProperty(Student student, int id){
+        //基本情况
+        student.setBase(student.getStudentVO().getString());
         //各科成绩
         List<Grade> gradeList = gradeService.getGradeByStudentId(id);
         StringBuilder gradeString = new StringBuilder();

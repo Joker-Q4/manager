@@ -17,9 +17,7 @@
         FROM teacher
     </select>
     <select id="findTeacherById" resultMap="teacher">
-        SELECT id, name, sex,
-               phone_number, address, academic_degree,
-               academic_degree, title
+        SELECT *
         FROM teacher
         where id = #{id}
     </select>
@@ -33,6 +31,9 @@
         update teacher
         set
         <trim  suffixOverrides="," >
+            <if test="sn != null and sn != ''">
+                sn=#{sn},
+            </if>
             <if test="name != null and name != ''">
                 name=#{name},
             </if>
@@ -57,8 +58,8 @@
     <insert id="insertTeacher" useGeneratedKeys="true" keyProperty="id"
             keyColumn="id" parameterType="com.sau.entity.Teacher">
         INSERT INTO
-            teacher(name, sex, phone_number, address, academic_degree, title)
+            teacher(sn, name, sex, phone_number, address, academic_degree, title)
         VALUES
-            (#{name},#{sex},#{phoneNumber},#{address},#{academicDegree},#{title})
+            (#{sn},#{name},#{sex},#{phoneNumber},#{address},#{academicDegree},#{title})
     </insert>
 </mapper>

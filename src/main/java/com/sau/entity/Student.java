@@ -1,13 +1,18 @@
 package com.sau.entity;
 
+import com.sau.entity.vo.StudentVO;
+
 public class Student {
 
     private Integer id;
+    private String sn;
     private String name;
     private String sex;
     private String phoneNumber;
     private String address;
 
+    private String base;
+    private StudentVO studentVO;
     //各科成绩
     private String grade;
     //获奖情况
@@ -29,6 +34,14 @@ public class Student {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getSn() {
+        return sn;
+    }
+
+    public void setSn(String sn) {
+        this.sn = sn;
     }
 
     public String getName() {
@@ -61,6 +74,23 @@ public class Student {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+
+    public StudentVO getStudentVO() {
+        return studentVO;
+    }
+
+    public void setStudentVO(StudentVO studentVO) {
+        this.studentVO = studentVO;
+    }
+
+    public String getBase() {
+        return base;
+    }
+
+    public void setBase(String base) {
+        this.base = base;
     }
 
     public String getGrade() {
@@ -132,6 +162,7 @@ public class Student {
 
     public String getString(){
         return id + " " +
+                sn + " " +
                 name + " " +
                 sex + " " +
                 phoneNumber + " " +

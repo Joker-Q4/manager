@@ -1,8 +1,11 @@
 package com.sau.entity;
 
+import com.sau.entity.vo.TeacherVO;
+
 public class Teacher {
 
     private Integer id;               //主键
+    private String sn;                //教师编号
     private String name;              //姓名
     private String sex;               //性别
     private String phoneNumber;       //联系方式
@@ -10,6 +13,7 @@ public class Teacher {
     private String academicDegree;    //学位
     private String title;             //高级职称
 
+    private String base;
     //授课情况
     private String teachingSituation;
     //行业实践经历
@@ -22,6 +26,7 @@ public class Teacher {
     private String scienceTechnologyAchievementAward;
     //专利授权
     private String patentAuthorization;
+    private TeacherVO teacherVO;
 
     public Integer getId() {
         return id;
@@ -29,6 +34,14 @@ public class Teacher {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getSn() {
+        return sn;
+    }
+
+    public void setSn(String sn) {
+        this.sn = sn;
     }
 
     public String getName() {
@@ -79,6 +92,16 @@ public class Teacher {
         this.title = title;
     }
 
+
+
+    public String getBase() {
+        return base;
+    }
+
+    public void setBase(String base) {
+        this.base = base;
+    }
+
     public String getTeachingSituation() {
         return teachingSituation;
     }
@@ -127,6 +150,14 @@ public class Teacher {
         this.patentAuthorization = patentAuthorization;
     }
 
+    public TeacherVO getTeacherVO() {
+        return teacherVO;
+    }
+
+    public void setTeacherVO(TeacherVO teacherVO) {
+        this.teacherVO = teacherVO;
+    }
+
     @Override
     public String toString() {
         return "Teacher{" +
@@ -142,6 +173,7 @@ public class Teacher {
 
     public String getString(){
         return id + " " +
+                sn + " " +
                 name + " " +
                 sex + " " +
                 phoneNumber + " " +

@@ -30,6 +30,9 @@
         update student
         set
         <trim  suffixOverrides="," >
+            <if test="sn != null and sn != ''">
+                sn=#{sn},
+            </if>
             <if test="name != null and name != ''">
                 name=#{name},
             </if>
@@ -48,8 +51,8 @@
     <insert id="insertStudentById" useGeneratedKeys="true" keyProperty="id"
             keyColumn="id" parameterType="com.sau.entity.Student">
         INSERT INTO
-            student(name, sex, phone_number, address)
+            student(sn, name, sex, phone_number, address)
         VALUES
-        (#{name},#{sex},#{phoneNumber},#{address})
+        (#{sn},#{name},#{sex},#{phoneNumber},#{address})
     </insert>
 </mapper>

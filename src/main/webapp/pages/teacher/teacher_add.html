@@ -22,6 +22,13 @@
                 </div>
             </div>
             <div class="layui-form-item">
+                <label class="layui-form-label required">教师编号</label>
+                <div class="layui-input-block">
+                    <input type="text" name="sn" lay-verify="required" lay-reqtext="教师编号不能为空" placeholder="请输入教师编号"
+                           value="" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
                 <label class="layui-form-label required">姓名</label>
                 <div class="layui-input-block">
                     <input type="text" name="name" lay-verify="required" lay-reqtext="姓名不能为空" placeholder="请输入用户名"
@@ -83,12 +90,21 @@
             table = layui.table,
             $ = layui.$;
 
+        var data;
+
         var requestUrl;
         if(sessionStorage.getItem(TYPE) === TYPE_EDIT){
+            data = JSON.parse(sessionStorage.getItem(DATA));
             setParam();
             requestUrl = URL_ROOT + 'teacher/updateTeacher';
-        }else {
+        }else if(sessionStorage.getItem(TYPE) === TYPE_ADD){
             requestUrl = URL_ROOT + 'teacher/addTeacher';
+        }else if(sessionStorage.getItem(TYPE) === TYPE_LOOK){
+            data = JSON.parse(sessionStorage.getItem(DATA));
+            setParam();
+            $("input").attr("disabled", "disabled");
+            $("input[value='"+data.sex+"']").removeAttr("disabled");
+            $(".layui-btn").parent().parent().css("display", "none");
         }
 
         /**
@@ -121,10 +137,10 @@
         });
 
         function setParam(){
-            var data = JSON.parse(sessionStorage.getItem(DATA));
             //表单赋值
             form.val('teacher', {
                 "id": data.id
+                ,"sn": data.sn
                 ,"name": data.name
                 ,"sex": data.sex
                 ,"phone": data.phoneNumber

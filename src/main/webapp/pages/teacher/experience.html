@@ -60,11 +60,16 @@
             table = layui.table;
 
         global_table = table;
+        var keyParam = UrlParm.parm("key");
+        var $_input_key = $("input[name='key']");
+        if(keyParam){
+            $_input_key.val(keyParam);
+        }
         var teacherId = sessionStorage.getItem(TEACHER_ID);
 
         table.render({
             elem: '#ExperienceTable',
-            url: '/experience/getExperienceByTeacherId?teacherId='+teacherId,
+            url: '/experience/getExperienceByTeacherId?teacherId='+teacherId+"&key="+$_input_key.val(),
             toolbar: '#toolbarExperience',
             defaultToolbar: ['filter', 'exports', 'print', {
                 title: '提示',
@@ -133,7 +138,7 @@
         table.on('toolbar(ExperienceTableFilter)', function (obj) {
             if (obj.event === 'add') {
                 sessionStorage.setItem(TYPE, TYPE_ADD);
-                var url = 'add_experience.html';
+                var url = 'experience_add.html';
                 layer.open({
                     title: '添加实践经历',
                     type: 2,
@@ -169,7 +174,7 @@
             if (obj.event === 'edit') {
                 sessionStorage.setItem(TYPE, TYPE_EDIT);
                 sessionStorage.setItem(DATA, JSON.stringify(obj.data));
-                url = 'add_experience.html';
+                url = 'experience_add.html';
                 layer.open({
                     title: '修改信息',
                     type: 2,

@@ -73,30 +73,40 @@
             cols: [[
                 {type: "checkbox", width: 50, fixed: "left"},
                 {field: 'id', width: 90, title: 'ID', sort: true, hide: true},
-                {field: 'name', width: 90, title: '姓名',templet: function(data){
+                {field: 'name', width: 90, title: '姓名', hide: false
+                    ,templet: function(data){
                         if(key !== "" && data.name.indexOf(key) !== -1 )
                             return '<span style="color: deepskyblue; ">'+data.name+'</span>';
                         else
                             return data.name;
                     }},
-                {field: 'sex', width: 90, title: '性别', sort: true,templet: function(data){
+                {field: 'sex', width: 90, title: '性别', sort: true, hide: true
+                    ,templet: function(data){
                         if(key !== "" && data.sex.indexOf(key) !== -1 )
                             return '<span style="color: deepskyblue; ">'+data.sex+'</span>';
                         else
                             return data.sex;
                     }},
-                {field: 'phoneNumber', width: 120, title: '联系方式',templet: function(data){
+                {field: 'phoneNumber', width: 120, title: '联系方式', hide: true
+                    ,templet: function(data){
                         if(key !== "" && data.phoneNumber.indexOf(key) !== -1 )
                             return '<span style="color: deepskyblue; ">'+data.phoneNumber+'</span>';
                         else
                             return data.phoneNumber;
                     }},
-                {field: 'address', width: 190, title: '家庭住址'
+                {field: 'address', width: 190, title: '家庭住址', hide: true
                     ,templet: function(data){
                         if(key !== "" && data.address.indexOf(key) !== -1 )
                             return '<span style="color: deepskyblue; ">'+data.address+'</span>';
                         else
                             return data.address;
+                    }},
+                {field: 'base', width: 120, title: '基本信息', align:"center"
+                    ,templet: function(data){
+                        if(key !== "" && data.base.indexOf(key) !== -1 )
+                            return '<a class="layui-btn layui-btn-xs layui-btn-normal data-count-edit" lay-event="lookBase">查看</a>';
+                        else
+                            return '<a class="layui-btn layui-btn-xs data-count-edit" lay-event="lookBase">查看</a>';
                     }},
                 {field: 'grade', width: 120, title: '各科成绩', align:"center"
                     ,templet: function(data){
@@ -147,7 +157,7 @@
                         else
                             return '<a class="layui-btn layui-btn-xs data-count-edit" lay-event="lookPatent">查看</a>';
                     }},
-                {title: '操作', width: 150, toolbar: '#currentTableBar', fixed: "right", align: "center"}
+                {title: '操作', minwidth: 150, toolbar: '#currentTableBar', fixed: "right", align: "center"}
             ]],
             limits: [10, 15, 20, 25, 50, 100],
             limit: 15,
@@ -178,8 +188,29 @@
             var name = obj.data.name;
             sessionStorage.setItem(STUDENT_ID, id);
             var url;
-            if (obj.event === 'lookGrade') {
+            if (obj.event === 'lookBase') {
+                url = 'student_add.html';
+                if(key !== ""){
+                    url += '?key=';
+                    url += key;
+                }
+                sessionStorage.setItem(TYPE, TYPE_LOOK);
+                sessionStorage.setItem(DATA, JSON.stringify(obj.data.studentVO));
+                layer.open({
+                    title: '<span style="color: red; ">'+name+'</span>' + '&nbsp;的基本信息',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin:true,
+                    shadeClose: true,
+                    area: ['90%', '90%'],
+                    content: url
+                });
+            }else if (obj.event === 'lookGrade') {
                 url = 'grade.html';
+                if(key !== ""){
+                    url += '?key=';
+                    url += key;
+                }
                 layer.open({
                     title: '<span style="color: red; ">'+name+'</span>' + '&nbsp;的成绩',
                     type: 2,
@@ -191,6 +222,10 @@
                 });
             } else if (obj.event === 'lookPrize') {
                 url = 'prize.html';
+                if(key !== ""){
+                    url += '?key=';
+                    url += key;
+                }
                 layer.open({
                     title: '<span style="color: red; ">'+name+'</span>' + '&nbsp;的获奖情况',
                     type: 2,
@@ -202,6 +237,10 @@
                 });
             } else if (obj.event === 'lookBusinessPractice') {
                 url = 'business_practice.html';
+                if(key !== ""){
+                    url += '?key=';
+                    url += key;
+                }
                 layer.open({
                     title: '<span style="color: red; ">'+name+'</span>' + '&nbsp;的企业实践活动',
                     type: 2,
@@ -214,6 +253,10 @@
             } else if (obj.event === 'lookThesis') {
                 sessionStorage.setItem(TYPE_ST, TYPE_S);
                 url = '../thesis.html';
+                if(key !== ""){
+                    url += '?key=';
+                    url += key;
+                }
                 layer.open({
                     title: '<span style="color: red; ">'+name+'</span>' + '&nbsp;的发表论文情况',
                     type: 2,
@@ -226,6 +269,10 @@
             } else if (obj.event === 'lookAchievement') {
                 sessionStorage.setItem(TYPE_ST, TYPE_S);
                 url = '../project_achievement.html';
+                if(key !== ""){
+                    url += '?key=';
+                    url += key;
+                }
                 layer.open({
                     title: '<span style="color: red; ">'+name+'</span>' + '&nbsp;的项目成果',
                     type: 2,
@@ -238,6 +285,10 @@
             } else if (obj.event === 'lookSTAward') {
                 sessionStorage.setItem(TYPE_ST, TYPE_S);
                 url = '../s_t_award.html';
+                if(key !== ""){
+                    url += '?key=';
+                    url += key;
+                }
                 layer.open({
                     title: '<span style="color: red; ">'+name+'</span>' + '&nbsp;的科技成果',
                     type: 2,
@@ -250,6 +301,10 @@
             } else if (obj.event === 'lookPatent') {
                 sessionStorage.setItem(TYPE_ST, TYPE_S);
                 url = '../patent_authorization.html';
+                if(key !== ""){
+                    url += '?key=';
+                    url += key;
+                }
                 layer.open({
                     title: '<span style="color: red; ">'+name+'</span>' + '&nbsp;的专利授权',
                     type: 2,
@@ -262,7 +317,7 @@
             } else if (obj.event === 'edit') {
                 sessionStorage.setItem(TYPE, TYPE_EDIT);
                 sessionStorage.setItem(DATA, JSON.stringify(obj.data));
-                url = 'add_student.html';
+                url = 'student_add.html';
                 layer.open({
                     title: '修改信息',
                     type: 2,
@@ -284,7 +339,7 @@
         table.on('toolbar(studentTableFilter)', function (obj) {
             if (obj.event === 'add') {
                 sessionStorage.setItem(TYPE, TYPE_ADD);
-                var url = 'add_student.html';
+                var url = 'student_add.html';
                 layer.open({
                     title: '添加学生',
                     type: 2,

@@ -81,51 +81,59 @@
                         else
                             return data.name;
                     }},
-                {field: 'sex', width: 80, title: '性别', sort: true
+                {field: 'sex', width: 80, title: '性别', sort: true, hide: true
                     ,templet: function(data){
                         if(key !== "" && data.sex.indexOf(key) !== -1 )
                             return '<span style="color: deepskyblue; ">'+data.sex+'</span>';
                         else
                             return data.sex;
                     }},
-                {field: 'phoneNumber', width: 120, title: '联系方式'
+                {field: 'phoneNumber', width: 120, title: '联系方式', hide: true
                     ,templet: function(data){
                         if(key !== "" && data.phoneNumber.indexOf(key) !== -1 )
                             return '<span style="color: deepskyblue; ">'+data.phoneNumber+'</span>';
                         else
                             return data.phoneNumber;
                     }},
-                {field: 'address', width: 180, title: '家庭住址'
+                {field: 'address', width: 180, title: '家庭住址', hide: true
                     ,templet: function(data){
                         if(key !== "" && data.address.indexOf(key) !== -1 )
                             return '<span style="color: deepskyblue; ">'+data.address+'</span>';
                         else
                             return data.address;
                     }},
-                {field: 'academicDegree', width: 120, title: '学位'
+                {field: 'academicDegree', width: 120, title: '学位', hide: true
                     ,templet: function(data){
                         if(key !== "" && data.academicDegree.indexOf(key) !== -1 )
                             return '<span style="color: deepskyblue; ">'+data.academicDegree+'</span>';
                         else
                             return data.academicDegree;
                     }},
-                {field: 'title', width: 120, title: '职称'
+                {field: 'title', width: 120, title: '职称', hide: true
                     ,templet: function(data){
                         if(key !== "" && data.title.indexOf(key) !== -1 )
                             return '<span style="color: deepskyblue; ">'+data.title+'</span>';
                         else
                             return data.title;
                     }},
-                {field: 'title', width: 120, title: '授课情况'
+
+                {field: 'base', width: 120, title: '基本信息', align:"center"
                     ,templet: function(data){
-                        if(key !== "" && data.patentAuthorization.indexOf(key) !== -1 )
+                        if(key !== "" && data.base.indexOf(key) !== -1 )
+                            return '<a class="layui-btn layui-btn-xs layui-btn-normal data-count-edit" lay-event="lookBase">查看</a>';
+                        else
+                            return '<a class="layui-btn layui-btn-xs data-count-edit" lay-event="lookBase">查看</a>';
+                    }},
+                {field: 'teachingSituation', width: 120, title: '授课情况'
+                    ,templet: function(data){
+                        if(key !== "" && data.teachingSituation.indexOf(key) !== -1 )
                             return '<a class="layui-btn layui-btn-xs layui-btn-normal data-count-edit" lay-event="lookSituation">查看</a>';
                         else
                             return '<a class="layui-btn layui-btn-xs data-count-edit" lay-event="lookSituation">查看</a>';
                     }},
-                {field: 'title', width: 120, title: '行业经验'
+                {field: 'industryExperience', width: 120, title: '行业经验'
                     ,templet: function(data){
-                        if(key !== "" && data.patentAuthorization.indexOf(key) !== -1 )
+                        if(key !== "" && data.industryExperience.indexOf(key) !== -1 )
                             return '<a class="layui-btn layui-btn-xs layui-btn-normal data-count-edit" lay-event="lookExperience">查看</a>';
                         else
                             return '<a class="layui-btn layui-btn-xs data-count-edit" lay-event="lookExperience">查看</a>';
@@ -158,7 +166,7 @@
                         else
                             return '<a class="layui-btn layui-btn-xs data-count-edit" lay-event="lookPatent">查看</a>';
                     }},
-                {title: '操作', width: 150, toolbar: '#currentTableBar', fixed: "right", align: "center"}
+                {title: '操作', minwidth: 150, toolbar: '#currentTableBar', fixed: "right", align: "center"}
             ]],
             limits: [10, 15, 20, 25, 50, 100],
             limit: 15,
@@ -194,10 +202,27 @@
             var name = obj.data.name;
             sessionStorage.setItem(TEACHER_ID, id);
             var url;
-            if (obj.event === 'edit') {
+            if (obj.event === 'lookBase') {
+                url = 'teacher_add.html';
+                if(key !== ""){
+                    url += '?key=';
+                    url += key;
+                }
+                sessionStorage.setItem(TYPE, TYPE_LOOK);
+                sessionStorage.setItem(DATA, JSON.stringify(obj.data.teacherVO));
+                layer.open({
+                    title: '<span style="color: red; ">'+name+'</span>' + '&nbsp;的基本信息',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin:true,
+                    shadeClose: true,
+                    area: ['90%', '90%'],
+                    content: url
+                });
+            }else if (obj.event === 'edit') {
                 sessionStorage.setItem(TYPE, TYPE_EDIT);
                 sessionStorage.setItem(DATA, JSON.stringify(obj.data));
-                url = 'add_teacher.html';
+                url = 'teacher_add.html';
                 layer.open({
                     title: '修改信息',
                     type: 2,
@@ -215,6 +240,10 @@
                 });
             } else if (obj.event === 'lookSituation') {  //查看教师授课情况
                 url = 'situation.html';
+                if(key !== ""){
+                    url += '?key=';
+                    url += key;
+                }
                 layer.open({
                     title: '修改信息',
                     type: 2,
@@ -225,6 +254,10 @@
                 });
             } else if (obj.event === 'lookExperience') {  //查看教师行业实践经历
                 url = 'experience.html';
+                if(key !== ""){
+                    url += '?key=';
+                    url += key;
+                }
                 layer.open({
                     title: '修改信息',
                     type: 2,
@@ -236,8 +269,12 @@
             } else if (obj.event === 'lookThesis') {
                 sessionStorage.setItem(TYPE_ST, TYPE_T);
                 url = '../thesis.html';
+                if(key !== ""){
+                    url += '?key=';
+                    url += key;
+                }
                 layer.open({
-                    title: '<font color="red">'+name+'</font>' + '&nbsp;的发表论文情况',
+                    title: '<span style="color: red; ">'+name+'</span>' + '&nbsp;的发表论文情况',
                     type: 2,
                     shade: 0.2,
                     maxmin:true,
@@ -248,8 +285,12 @@
             } else if (obj.event === 'lookAchievement') {
                 sessionStorage.setItem(TYPE_ST, TYPE_T);
                 url = '../project_achievement.html';
+                if(key !== ""){
+                    url += '?key=';
+                    url += key;
+                }
                 layer.open({
-                    title: '<font color="red">'+name+'</font>' + '&nbsp;的项目成果',
+                    title: '<span style="color: red; ">'+name+'</span>' + '&nbsp;的项目成果',
                     type: 2,
                     shade: 0.2,
                     maxmin:true,
@@ -260,8 +301,12 @@
             } else if (obj.event === 'lookSTAward') {
                 sessionStorage.setItem(TYPE_ST, TYPE_T);
                 url = '../s_t_award.html';
+                if(key !== ""){
+                    url += '?key=';
+                    url += key;
+                }
                 layer.open({
-                    title: '<font color="red">'+name+'</font>' + '&nbsp;的科技成果',
+                    title: '<span style="color: red; ">'+name+'</span>' + '&nbsp;的科技成果',
                     type: 2,
                     shade: 0.2,
                     maxmin:true,
@@ -272,8 +317,12 @@
             } else if (obj.event === 'lookPatent') {
                 sessionStorage.setItem(TYPE_ST, TYPE_T);
                 url = '../patent_authorization.html';
+                if(key !== ""){
+                    url += '?key=';
+                    url += key;
+                }
                 layer.open({
-                    title: '<font color="red">'+name+'</font>' + '&nbsp;的专利授权',
+                    title: '<span style="color: red; ">'+name+'</span>' + '&nbsp;的专利授权',
                     type: 2,
                     shade: 0.2,
                     maxmin:true,
@@ -287,7 +336,7 @@
         table.on('toolbar(teacherTableFilter)', function (obj) {
             if (obj.event === 'add') {
                 sessionStorage.setItem(TYPE, TYPE_ADD);
-                var url = 'add_teacher.html';
+                var url = 'teacher_add.html';
                 layer.open({
                     title: '添加教师',
                     type: 2,

@@ -55,11 +55,17 @@
 
         global_table = table;
 
+        var keyParam = UrlParm.parm("key");
+        var $_input_key = $("input[name='key']");
+        if(keyParam){
+            $_input_key.val(keyParam);
+        }
+
         var studentId = sessionStorage.getItem(STUDENT_ID);
 
         table.render({
             elem: '#GradeTable',
-            url: '/grade/getGradeByStudentId?studentId='+studentId,
+            url: '/grade/getGradeByStudentId?studentId='+studentId+"&key="+$_input_key.val(),
             toolbar: '#toolbarSituation',
             defaultToolbar: ['filter', 'exports', 'print', {
                 title: '提示',
