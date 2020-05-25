@@ -23,6 +23,46 @@
         FROM grade
         where student_id = #{studentId}
     </select>
+    <select id="findCombinedLanguage" resultType="Double">
+        SELECT combined_language
+        FROM grade
+    </select>
+    <select id="findCombinedLanguagePlus" resultType="Double">
+        SELECT combined_language_plus
+        FROM grade
+    </select>
+    <select id="findAdvancedMathematics" resultType="Double">
+        SELECT advanced_mathematics
+        FROM grade
+    </select>
+    <select id="findEnglish" resultType="Double">
+        SELECT english
+        FROM grade
+    </select>
+    <select id="findDataStructure" resultType="Double">
+        SELECT data_structure
+        FROM grade
+    </select>
+    <select id="findJava" resultType="Double">
+        SELECT java
+        FROM grade
+    </select>
+    <select id="findComputerPrinciples" resultType="Double">
+        SELECT computer_principles
+        FROM grade
+    </select>
+    <select id="findComputerNetwork" resultType="Double">
+        SELECT computer_network
+        FROM grade
+    </select>
+    <select id="findOracle" resultType="Double">
+        SELECT oracle
+        FROM grade
+    </select>
+    <select id="findWeb" resultType="Double">
+        SELECT web
+        FROM grade
+    </select>
     <update id="updateGrade" parameterType="com.sau.entity.Grade">
         update grade
         set

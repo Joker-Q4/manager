@@ -2,22 +2,22 @@ package com.sau.kmeans;
 
 public class Point {
 
-    private float[] localArray;
+    private double[] localArray;
     private int id;
     private int clusterId;  // 标识属于哪个类中心。
-    private float dist;     // 标识和所属类中心的距离。
+    private double dist;     // 标识和所属类中心的距离。
 
-    public Point(int id, float[] localArray) {
+    public Point(int id, double[] localArray) {
         this.id = id;
         this.localArray = localArray;
     }
 
-    public Point(float[] localArray) {
+    public Point(double[] localArray) {
         this.id = -1; //表示不属于任意一个类
         this.localArray = localArray;
     }
 
-    public float[] getlocalArray() {
+    public double[] getlocalArray() {
         return localArray;
     }
 
@@ -33,11 +33,11 @@ public class Point {
         return clusterId;
     }
 
-    public float getDist() {
+    public double getDist() {
         return dist;
     }
 
-    public void setDist(float dist) {
+    public void setDist(double dist) {
         this.dist = dist;
     }
 
@@ -60,7 +60,7 @@ public class Point {
             return false;
 
         for (int i = 0; i < localArray.length; i++) {
-            if (Float.compare(point.localArray[i], localArray[i]) != 0) {
+            if (Double.compare(point.localArray[i], localArray[i]) != 0) {
                 return false;
             }
         }
@@ -69,8 +69,8 @@ public class Point {
 
     @Override
     public int hashCode() {
-        float x = localArray[0];
-        float y = localArray[localArray.length - 1];
+        double x = localArray[0];
+        double y = localArray[localArray.length - 1];
         long temp = x != +0.0d ? Double.doubleToLongBits(x) : 0L;
         int result = (int) (temp ^ (temp >>> 32));
         temp = y != +0.0d ? Double.doubleToLongBits(y) : 0L;

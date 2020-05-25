@@ -1,9 +1,12 @@
 package com.sau.kmeans;
 
+import com.sau.utils.MyCompare;
+
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
-public class Cluster {
+public class Cluster implements Comparator<Cluster> {
     private final int id;// 标识
     private Point center;// 中心
     private List<Point> members = new ArrayList<>();// 成员
@@ -51,5 +54,16 @@ public class Cluster {
             toString.append("\n").append(point.toString());
         }
         return toString.toString()+"\n";
+    }
+
+    @Override
+    public int compare(Cluster o1, Cluster o2) {
+        double result = o1.getCenter().getlocalArray()[0] - o2.getCenter().getlocalArray()[0];
+        if(result > 0)
+            return 1;
+        else if(result == 0)
+            return 0;
+        else
+            return -1;
     }
 }

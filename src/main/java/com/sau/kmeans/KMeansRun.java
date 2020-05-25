@@ -8,14 +8,14 @@ public class KMeansRun {
 
     private final int iterMaxTimes = 100000;            //单次迭代最大运行次数
     private int iterRunTimes = 0;                 //单次迭代实际运行次数
-    private final float disDiff = (float) 0.01;         //单次迭代终止条件，两次运行中类中心的距离差
+    private final double disDiff = (double) 0.01;         //单次迭代终止条件，两次运行中类中心的距离差
 
-    private List<float[]> original_data =null;    //用于存放，原始数据集
+    private List<double[]> original_data =null;    //用于存放，原始数据集
     private static List<Point> pointList = null;  //用于存放，原始数据集所构建的点集
     private final DistanceCompute disC = new DistanceCompute();
     private int len = 0;                          //用于记录每个数据点的维度
 
-    public KMeansRun(int k, List<float[]> original_data) {
+    public KMeansRun(int k, List<double[]> original_data) {
         this.kNum = k;
         this.original_data = original_data;
         this.len = original_data.get(0).length;
@@ -79,9 +79,9 @@ public class KMeansRun {
     public void cluster(Set<Cluster> clusterSet){
         // 计算每个点到K个中心的距离，并且为每个点标记类别号
         for (Point point : pointList) {
-            float min_dis = Integer.MAX_VALUE;
+            double min_dis = Integer.MAX_VALUE;
             for (Cluster cluster : clusterSet) {
-                float tmp_dis = (float) Math.min(disC.getEuclideanDis(point, cluster.getCenter()), min_dis);
+                double tmp_dis = (double) Math.min(disC.getEuclideanDis(point, cluster.getCenter()), min_dis);
                 if (tmp_dis != min_dis) {
                     min_dis = tmp_dis;
                     point.setClusterId(cluster.getId());
@@ -107,7 +107,7 @@ public class KMeansRun {
         boolean ifNeedIter = false;
         for (Cluster cluster : clusterSet) {
             List<Point> point_list = cluster.getMembers();
-            float[] sumAll =new float[len];
+            double[] sumAll =new double[len];
             // 所有点，对应各个维度进行求和
             for (int i = 0; i < len; i++) {
                 for (Point point : point_list) {

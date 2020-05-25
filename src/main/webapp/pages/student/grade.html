@@ -40,6 +40,8 @@
 
         <table class="layui-hide" id="GradeTable" lay-filter="GradeTableFilter"></table>
 
+        <table class="layui-hide" id="GradeTableDes" lay-filter="GradeTableDesFilter"></table>
+
     </div>
 </div>
 <script src="../../lib/layui-v2.5.5/layui.js" charset="utf-8"></script>
@@ -146,6 +148,28 @@
                             return data.web;
                     }},
                 {field: 'studentId', width: 150, title: '学生id', hide: true}
+            ]],
+            limits: [10, 15, 20, 25, 50, 100],
+            limit: 15,
+            page: false
+        });
+
+        table.render({
+            elem: '#GradeTableDes',
+            url: '/grade/getGradeAssessmentByStudentId?studentId='+studentId+"&key="+$_input_key.val(),
+            cols: [[
+                // {type: "radio", width: 50, fixed: "left"},
+                {field: 'id', width: 80, title: 'ID', hide: true},
+                {field: 'combinedLanguage', width: 80, title: 'C语言', edit: false },
+                {field: 'combinedLanguagePlus', width: 80, title: 'C++', edit: false},
+                {field: 'advancedMathematics', width: 80, title: '高等数学', edit: false},
+                {field: 'english', width: 80, title: '英语', edit: false},
+                {field: 'dataStructure', width: 120, title: '数据结构', edit: false},
+                {field: 'java', width: 100, title: 'Java语言程序设计', edit: false},
+                {field: 'computerPrinciples', width: 150, title: '计算机组成原理', edit: false},
+                {field: 'computerNetwork', width: 150, title: '计算机网络原理', edit: false},
+                {field: 'oracle', width: 120, title: 'Oracle数据库', edit: false},
+                {field: 'web', width: 150, title: 'Web应用程序设计', edit: false}
             ]],
             limits: [10, 15, 20, 25, 50, 100],
             limit: 15,
