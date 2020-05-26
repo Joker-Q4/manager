@@ -90,12 +90,12 @@
                         else
                             return data.description;
                     }},
-                {field: 'createTime', width: 120, title: '创建时间'
+                {field: 'create', width: 250, title: '创建时间'
                     ,templet: function(data){
-                        if(key !== "" && data.createTime.indexOf(key) !== -1 )
-                            return '<span style="color: deepskyblue; ">'+data.createTime+'</span>';
+                        if(key !== "" && data.create.indexOf(key) !== -1 )
+                            return '<span style="color: deepskyblue; ">'+data.create+'</span>';
                         else
-                            return data.createTime;
+                            return data.create;
                     }}
             ]],
             limits: [10, 15, 20, 25, 50, 100],

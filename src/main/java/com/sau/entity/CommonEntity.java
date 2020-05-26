@@ -14,6 +14,7 @@ public class CommonEntity {
     private Integer teacherId;
     private Teacher teacher;
     private Timestamp createTime;
+    private String create;
 
     public Integer getId() {
         return id;
@@ -95,6 +96,14 @@ public class CommonEntity {
         this.createTime = createTime;
     }
 
+    public String getCreate() {
+        return create;
+    }
+
+    public void setCreate(String create) {
+        this.create = create;
+    }
+
     @Override
     public String toString() {
         return "CommonEntity{" +
@@ -119,6 +128,6 @@ public class CommonEntity {
                 student + " " +
                 teacherId + " " +
                 teacher + " " +
-                createTime;
+                create;
     }
 }

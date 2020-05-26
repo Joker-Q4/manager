@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 @Service("projectAchievementService")
@@ -17,12 +18,22 @@ public class ProjectAchievementServiceImpl implements ProjectAchievementService 
 
     @Override
     public List<ProjectAchievement> findAchievementByStudentId(Integer studentId) {
-        return mapper.findProjectAchievementByStudentId(studentId);
+        List<ProjectAchievement> list = mapper.findProjectAchievementByStudentId(studentId);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        for(ProjectAchievement projectAchievement:list){
+            projectAchievement.setCreate(format.format(projectAchievement.getCreateTime()));
+        }
+        return list;
     }
 
     @Override
     public List<ProjectAchievement> findAchievementByTeacherId(Integer teacherId) {
-        return mapper.findProjectAchievementByTeacherId(teacherId);
+        List<ProjectAchievement> list = mapper.findProjectAchievementByTeacherId(teacherId);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        for(ProjectAchievement projectAchievement:list){
+            projectAchievement.setCreate(format.format(projectAchievement.getCreateTime()));
+        }
+        return list;
     }
 
     @Override

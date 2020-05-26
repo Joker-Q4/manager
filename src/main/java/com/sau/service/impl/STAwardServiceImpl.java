@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 @Service("stAwardService")
@@ -17,12 +18,22 @@ public class STAwardServiceImpl implements STAwardService {
 
     @Override
     public List<ScienceTechnologyAchievementAward> findSTAwardByStudentId(Integer studentId) {
-        return stAwardMapper.findSTAwardByStudentId(studentId);
+        List<ScienceTechnologyAchievementAward> list = stAwardMapper.findSTAwardByStudentId(studentId);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        for(ScienceTechnologyAchievementAward scienceTechnologyAchievementAward:list){
+            scienceTechnologyAchievementAward.setCreate(format.format(scienceTechnologyAchievementAward.getCreateTime()));
+        }
+        return list;
     }
 
     @Override
     public List<ScienceTechnologyAchievementAward> findSTAwardByTeacherId(Integer teacherId) {
-        return stAwardMapper.findSTAwardByTeacherId(teacherId);
+        List<ScienceTechnologyAchievementAward> list = stAwardMapper.findSTAwardByTeacherId(teacherId);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        for(ScienceTechnologyAchievementAward scienceTechnologyAchievementAward:list){
+            scienceTechnologyAchievementAward.setCreate(format.format(scienceTechnologyAchievementAward.getCreateTime()));
+        }
+        return list;
     }
 
     @Override

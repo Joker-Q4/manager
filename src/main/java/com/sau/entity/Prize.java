@@ -11,6 +11,7 @@ public class Prize {
     private String name;
     private String description;
     private Timestamp createTime;
+    private String create;
     private Integer studentId;
     private Student student;
 
@@ -46,6 +47,14 @@ public class Prize {
         this.createTime = createTime;
     }
 
+    public String getCreate() {
+        return create;
+    }
+
+    public void setCreate(String create) {
+        this.create = create;
+    }
+
     public Integer getStudentId() {
         return studentId;
     }
@@ -78,7 +87,7 @@ public class Prize {
         return id + " " +
                 name + " " +
                 description + " " +
-                createTime + " " +
+                create + " " +
                 studentId + " " +
                 student;
     }

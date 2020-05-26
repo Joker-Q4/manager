@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 @Service("patentAuthorizationService")
@@ -17,12 +18,22 @@ public class PatentAuthorizationServiceImpl implements PatentAuthorizationServic
 
     @Override
     public List<PatentAuthorization> findAuthorizationByStudentId(Integer studentId) {
-        return patentAuthorizationMapper.findPatentAuthorizationByStudentId(studentId);
+        List<PatentAuthorization> list = patentAuthorizationMapper.findPatentAuthorizationByStudentId(studentId);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        for(PatentAuthorization patentAuthorization:list){
+            patentAuthorization.setCreate(format.format(patentAuthorization.getCreateTime()));
+        }
+        return list;
     }
 
     @Override
     public List<PatentAuthorization> findAuthorizationByTeacherId(Integer teacherId) {
-        return patentAuthorizationMapper.findPatentAuthorizationByTeacherId(teacherId);
+        List<PatentAuthorization> list = patentAuthorizationMapper.findPatentAuthorizationByTeacherId(teacherId);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        for(PatentAuthorization patentAuthorization:list){
+            patentAuthorization.setCreate(format.format(patentAuthorization.getCreateTime()));
+        }
+        return list;
     }
 
     @Override

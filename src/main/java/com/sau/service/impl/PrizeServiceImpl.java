@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 @Service("prizeService")
@@ -17,7 +18,12 @@ public class PrizeServiceImpl implements PrizeService {
 
     @Override
     public List<Prize> getPrizeByStudentId(Integer studentId) {
-        return prizeMapper.findPrizeByStudentId(studentId);
+        List<Prize> list = prizeMapper.findPrizeByStudentId(studentId);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        for(Prize prize:list){
+            prize.setCreate(format.format(prize.getCreateTime()));
+        }
+        return list;
     }
 
     @Override

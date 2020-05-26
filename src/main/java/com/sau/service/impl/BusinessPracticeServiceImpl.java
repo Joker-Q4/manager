@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 @Service("businessPracticeService")
@@ -17,7 +18,12 @@ public class BusinessPracticeServiceImpl implements BusinessPracticeService {
 
     @Override
     public List<BusinessPractice> getPracticeByStudentId(Integer studentId) {
-        return businessPracticeMapper.findPracticeByStudentId(studentId);
+        List<BusinessPractice> list = businessPracticeMapper.findPracticeByStudentId(studentId);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        for(BusinessPractice businessPractice:list){
+            businessPractice.setCreate(format.format(businessPractice.getCreateTime()));
+        }
+        return list;
     }
 
     @Override

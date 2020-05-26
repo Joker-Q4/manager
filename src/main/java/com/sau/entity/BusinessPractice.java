@@ -11,6 +11,7 @@ public class BusinessPractice {
     private String name;   //企业名称
     private String description;  //详细描述
     private Timestamp createTime;   //创建时间
+    private String create;   //创建时间
     private Integer studentId;   //绑定学生
 
     public Integer getId() {
@@ -45,6 +46,14 @@ public class BusinessPractice {
         this.createTime = createTime;
     }
 
+    public String getCreate() {
+        return create;
+    }
+
+    public void setCreate(String create) {
+        this.create = create;
+    }
+
     public Integer getStudentId() {
         return studentId;
     }
@@ -68,7 +77,7 @@ public class BusinessPractice {
         return id + " " +
                 name + " " +
                 description + " " +
-                createTime + " " +
+                create + " " +
                 studentId;
     }
 }
