@@ -151,7 +151,15 @@
             ]],
             limits: [10, 15, 20, 25, 50, 100],
             limit: 15,
-            page: false
+            page: false,
+            parseData: function (res) {
+                return {
+                    "code": res.code,
+                    "msg": res.msg,
+                    "count": res.data.total,
+                    "data": res.data.list
+                };
+            }
         });
 
         table.render({
@@ -172,8 +180,16 @@
                 {field: 'web', width: 150, title: 'Web应用程序设计', edit: false}
             ]],
             limits: [10, 15, 20, 25, 50, 100],
-            limit: 15,
-            page: false
+            limit: 10,
+            page: false,
+            parseData: function (res) {
+                return {
+                    "code": res.code,
+                    "msg": res.msg,
+                    "count": res.data.total,
+                    "data": res.data.list
+                };
+            }
         });
 
         // 监听搜索操作

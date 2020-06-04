@@ -1,6 +1,8 @@
 package com.sau.controller;
 
-import com.sau.entity.BusinessPractice;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.sau.entity.Page;
 import com.sau.entity.Thesis;
 import com.sau.global.Global;
 import com.sau.global.JsonTools;
@@ -26,14 +28,18 @@ public class ThesisController {
     @GetMapping("/getThesisByStudentId")
     public Map<String, Object> getThesisByStudentId(
             @RequestParam(defaultValue = "") String studentId,
-            @RequestParam(defaultValue = "") String key
+            @RequestParam(defaultValue = "") String key,
+            @RequestParam(defaultValue = Page.PAGE_INDEX) String page,
+            @RequestParam(defaultValue = Page.PAGE_SIZE) String limit
     ){
+        PageHelper.startPage(Integer.parseInt(page), Integer.parseInt(limit));
         if(key.isEmpty()){
             if(studentId.isEmpty()){
                 return JsonTools.toResult(1, "参数有误", 0, null);
             }
             final List<Thesis> list = thesisService.getThesisByStudentId(Integer.valueOf(studentId));
-            return JsonTools.toResult(0, "成功", list.size(), list);
+            PageInfo<Thesis> pageInfo = new PageInfo<>(list);
+            return JsonTools.toResult(0, "成功", pageInfo.getTotal(), pageInfo);
         }else {
             if(studentId.isEmpty()){
                 return JsonTools.toResult(1, "参数有误", 0, null);
@@ -47,21 +53,26 @@ public class ThesisController {
                     result.add(thesis);
                 }
             }
-            return JsonTools.toResult(0, "成功", result.size(), result);
+            PageInfo<Thesis> pageInfo = new PageInfo<>(result);
+            return JsonTools.toResult(0, "成功", pageInfo.getTotal(), pageInfo);
         }
     }
 
     @GetMapping("/getThesisByTeacherId")
     public Map<String, Object> getThesisByTeacherId(
             @RequestParam(defaultValue = "") String teacherId,
-            @RequestParam(defaultValue = "") String key
+            @RequestParam(defaultValue = "") String key,
+            @RequestParam(defaultValue = Page.PAGE_INDEX) String page,
+            @RequestParam(defaultValue = Page.PAGE_SIZE) String limit
     ){
+        PageHelper.startPage(Integer.parseInt(page), Integer.parseInt(limit));
         if(key.isEmpty()) {
             if (teacherId.isEmpty()) {
                 return JsonTools.toResult(1, "参数有误", 0, null);
             }
             final List<Thesis> list = thesisService.getThesisByTeacherId(Integer.valueOf(teacherId));
-            return JsonTools.toResult(0, "成功", list.size(), list);
+            PageInfo<Thesis> pageInfo = new PageInfo<>(list);
+            return JsonTools.toResult(0, "成功", pageInfo.getTotal(), pageInfo);
         }else {
             if (teacherId.isEmpty()) {
                 return JsonTools.toResult(1, "参数有误", 0, null);
@@ -75,7 +86,8 @@ public class ThesisController {
                     result.add(thesis);
                 }
             }
-            return JsonTools.toResult(0, "成功", result.size(), result);
+            PageInfo<Thesis> pageInfo = new PageInfo<>(result);
+            return JsonTools.toResult(0, "成功", pageInfo.getTotal(), pageInfo);
         }
     }
 

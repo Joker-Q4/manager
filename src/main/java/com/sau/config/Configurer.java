@@ -1,5 +1,6 @@
 package com.sau.config;
 
+import com.sau.config.interceptor.LoginInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -14,15 +15,35 @@ public class Configurer implements WebMvcConfigurer {
         InterceptorRegistration registration = registry.addInterceptor(new LoginInterceptor());
         registration.addPathPatterns("/**");                      //所有路径都被拦截
         registration.excludePathPatterns(                         //添加不拦截路径
-                "/**"//,
-//                "/**/index.html",            //登录
-//                "/**/*.js",              //js静态资源
-//                "/**/*.css",             //css静态资源
-//                "/**/*.woff",
-//                "/**/*.jpg",
-//                "/**/*.png",
-//                "/**/*.ttf"
+              //  "/**"//,
+                "/**/register.html",            //登录
+                "/**/menu",            //登录
+                "/**/*.js",              //js静态资源
+                "/**/*.css",             //css静态资源
+                "/**/*.woff",
+                "/**/*.woff2",
+                "/**/*.jpg",
+                "/**/*.png",
+                "/**/*.gif",
+                "/**/*.json",
+                "/**/*.map",
+                "/**/*.svg",
+                "/**/*.ttf",
+                "/**/layuimini",
+                "/register.html",            //登录
+                "/menu",            //登录
+                "/*.js",              //js静态资源
+                "/*.css",             //css静态资源
+                "/*.woff",
+                "/*.woff2",
+                "/*.jpg",
+                "/*.gif",
+                "/*.png",
+                "/*.json",
+                "/*.map",
+                "/*.svg",
+                "/*.ttf",
+                "/layuimini"
         );
     }
-
 }

@@ -102,7 +102,7 @@ public class JsonTools {
 		return map;
 	}
 
-	public static Map<String, Object> toResult(int code, String msg, int count, Object data){
+	public static Map<String, Object> toResult(int code, String msg, long count, Object data){
 		Map<String, Object> map = new HashMap<>();
 		map.put("code", code);
 		map.put("msg", msg);

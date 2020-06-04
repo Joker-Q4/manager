@@ -1,7 +1,10 @@
 package com.sau.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.sau.entity.IndustryExperience;
+import com.sau.entity.Page;
 import com.sau.global.Global;
 import com.sau.global.GlobalKey;
 import com.sau.global.JsonTools;
@@ -26,14 +29,18 @@ public class IndustryExperienceController {
     @GetMapping("/getExperienceByTeacherId")
     public Map<String, Object> getExperienceByTeacherId(
             @RequestParam(defaultValue = "") String teacherId,
-            @RequestParam(defaultValue = "") String key
+            @RequestParam(defaultValue = "") String key,
+            @RequestParam(defaultValue = Page.PAGE_INDEX) String page,
+            @RequestParam(defaultValue = Page.PAGE_SIZE) String limit
     ){
+        PageHelper.startPage(Integer.parseInt(page), Integer.parseInt(limit));
         if(key.isEmpty()){
             if(teacherId.isEmpty()){
                 return JsonTools.toResult(1, "参数有误", 0, null);
             }
             final List<IndustryExperience> list = experienceService.getExperienceByTeacherId(Integer.valueOf(teacherId));
-            return JsonTools.toResult(0, "success", list.size(), list);
+            PageInfo<IndustryExperience> pageInfo = new PageInfo<>(list);
+            return JsonTools.toResult(0, "成功", pageInfo.getTotal(), pageInfo);
         }else{
             if(teacherId.isEmpty()){
                 return JsonTools.toResult(1, "参数有误", 0, null);
@@ -47,7 +54,8 @@ public class IndustryExperienceController {
                     result.add(industryExperience);
                 }
             }
-            return JsonTools.toResult(0, "成功", result.size(), result);
+            PageInfo<IndustryExperience> pageInfo = new PageInfo<>(result);
+            return JsonTools.toResult(0, "成功", pageInfo.getTotal(), pageInfo);
         }
     }
 

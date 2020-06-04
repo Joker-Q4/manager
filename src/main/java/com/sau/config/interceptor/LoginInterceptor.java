@@ -1,4 +1,4 @@
-package com.sau.config;
+package com.sau.config.interceptor;
 
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -11,21 +11,22 @@ public class LoginInterceptor implements HandlerInterceptor {
 
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
 
-        return true;
-
-    /*    String url = httpServletRequest.getRequestURI();
+        String url = httpServletRequest.getRequestURI();
         if(url.toLowerCase().indexOf("login") > 0){
             return true;
         }
 
         HttpSession session = httpServletRequest.getSession();
 
-        if(url.toLowerCase().indexOf("entrepreneur")>0 && !StringUtils.isEmpty(session.getAttribute("entrepreneur"))){
-            return true;
+        if(url.indexOf("html")>0){
+            if((url.toLowerCase().indexOf("pages")>0
+                    || url.toLowerCase().endsWith("index.html"))
+                    && !StringUtils.isEmpty(session.getAttribute("admin"))){
+                return true;
+            }
+            httpServletResponse.sendRedirect("/login.html");
+            return false;
         }
-
-        httpServletResponse.sendRedirect("/index.html");
-
-        return false;*/
+        return true;
     }
 }

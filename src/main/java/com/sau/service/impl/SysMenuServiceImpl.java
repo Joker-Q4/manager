@@ -5,6 +5,7 @@ import com.sau.entity.MenuVo;
 import com.sau.entity.SysMenu;
 import com.sau.mapper.SysMenuMapper;
 import com.sau.service.SysMenuService;
+import com.sau.service.SysSettingService;
 import com.sau.utils.TreeUtil;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,10 @@ import java.util.Map;
 public class SysMenuServiceImpl implements SysMenuService {
 
     @Resource
-    private SysMenuMapper sysMenuMapper;
+    SysMenuMapper sysMenuMapper;
+
+    @Resource
+    SysSettingService sysSettingService;
 
     @Override
     public Map<String, Object> menu() {
@@ -35,8 +39,12 @@ public class SysMenuServiceImpl implements SysMenuService {
             menuVO.setTarget(e.getTarget());
             menuInfo.add(menuVO);
         }
-        map.put("homeInfo", JSONObject.parseObject("{'title': '首页', 'href': 'page/welcome-1.html'}"));
-        map.put("logoInfo", JSONObject.parseObject("{'title': 'GYY', 'image': 'images/logo.png'}"));
+        Map<String, String> temp = sysSettingService.getAll();
+        /*map.put("homeInfo", JSONObject.parseObject("{'title': '"+sysSettingService.getValueByKey("home_title")+"', 'href': '"+sysSettingService.getValueByKey("home_href")+"'}"));
+        map.put("logoInfo", JSONObject.parseObject("{'title': '"+sysSettingService.getValueByKey("logo_title")+"', 'image': '"+sysSettingService.getValueByKey("logo_href")+"'}"));
+        map.put("menuInfo", TreeUtil.toTree(menuInfo, 0L));*/
+        map.put("homeInfo", JSONObject.parseObject("{'title': '"+temp.get("home_title")+"', 'href': '"+temp.get("home_href")+"'}"));
+        map.put("logoInfo", JSONObject.parseObject("{'title': '"+temp.get("logo_title")+"', 'image': '"+temp.get("logo_href")+"'}"));
         map.put("menuInfo", TreeUtil.toTree(menuInfo, 0L));
         return map;
     }

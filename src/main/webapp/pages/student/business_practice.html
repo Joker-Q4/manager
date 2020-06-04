@@ -99,8 +99,16 @@
                     }}
             ]],
             limits: [10, 15, 20, 25, 50, 100],
-            limit: 15,
-            page: true
+            limit: 10,
+            page: true,
+            parseData: function (res) {
+                return {
+                    "code": res.code,
+                    "msg": res.msg,
+                    "count": res.data.total,
+                    "data": res.data.list
+                };
+            }
         });
 
         // 监听搜索操作

@@ -124,14 +124,14 @@
                         else
                             return '<a class="layui-btn layui-btn-xs data-count-edit" lay-event="lookBase">查看</a>';
                     }},
-                {field: 'teachingSituation', width: 120, title: '授课情况'
+                {field: 'teachingSituation', width: 120, title: '授课情况', align:"center"
                     ,templet: function(data){
                         if(key !== "" && data.teachingSituation.indexOf(key) !== -1 )
                             return '<a class="layui-btn layui-btn-xs layui-btn-normal data-count-edit" lay-event="lookSituation">查看</a>';
                         else
                             return '<a class="layui-btn layui-btn-xs data-count-edit" lay-event="lookSituation">查看</a>';
                     }},
-                {field: 'industryExperience', width: 120, title: '行业经验'
+                {field: 'industryExperience', width: 120, title: '行业经验', align:"center"
                     ,templet: function(data){
                         if(key !== "" && data.industryExperience.indexOf(key) !== -1 )
                             return '<a class="layui-btn layui-btn-xs layui-btn-normal data-count-edit" lay-event="lookExperience">查看</a>';
@@ -169,8 +169,16 @@
                 {title: '操作', minwidth: 150, toolbar: '#currentTableBar', fixed: "right", align: "center"}
             ]],
             limits: [10, 15, 20, 25, 50, 100],
-            limit: 15,
-            page: true
+            limit: 10,
+            page: true,
+            parseData: function (res) {
+                return {
+                    "code": res.code,
+                    "msg": res.msg,
+                    "count": res.data.total,
+                    "data": res.data.list
+                };
+            }
         });
 
         // 监听搜索操作

@@ -4,6 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 
 <configuration>
+
     <!-- 配置全局属性 -->
     <settings>
         <!-- 使用jdbc的getGeneratedKeys获取数据库自增主键值 -->
@@ -21,4 +22,12 @@
         <!--允许插入null  默认不允许插入null值 -->
         <setting name="jdbcTypeForNull" value="NULL"/>
     </settings>
+
+    <!-- 配置分页插件 -->
+    <plugins>
+        <plugin interceptor="com.github.pagehelper.PageInterceptor">
+            <!-- 设置数据库类型 Oracle,Mysql,MariaDB,SQLite,Hsqldb,PostgreSQL六种数据库-->
+            <property name="helperDialect" value="mysql"/>
+        </plugin>
+    </plugins>
 </configuration>

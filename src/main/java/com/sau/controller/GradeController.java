@@ -1,8 +1,11 @@
 package com.sau.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.sau.entity.Grade;
 import com.sau.entity.GradeAssessment;
+import com.sau.entity.Page;
 import com.sau.global.Global;
 import com.sau.global.GlobalKey;
 import com.sau.global.JsonTools;
@@ -28,14 +31,18 @@ public class GradeController {
     @GetMapping("/getGradeByStudentId")
     public Map<String, Object> getGradeByStudentId(
             @RequestParam(defaultValue = "") String studentId,
-            @RequestParam(defaultValue = "") String key
+            @RequestParam(defaultValue = "") String key,
+            @RequestParam(defaultValue = Page.PAGE_INDEX) String page,
+            @RequestParam(defaultValue = Page.PAGE_SIZE) String limit
     ) {
+        PageHelper.startPage(Integer.parseInt(page), Integer.parseInt(limit));
         if (key.isEmpty()) {
             if (studentId.isEmpty()) {
                 return JsonTools.toResult(1, "参数有误", 0, null);
             }
             final List<Grade> list = gradeService.getGradeByStudentId(Integer.valueOf(studentId));
-            return JsonTools.toResult(0, "success", list.size(), list);
+            PageInfo<Grade> pageInfo = new PageInfo<>(list);
+            return JsonTools.toResult(0, "成功", pageInfo.getTotal(), pageInfo);
         } else {
             if (studentId.isEmpty()) {
                 return JsonTools.toResult(1, "参数有误", 0, null);
@@ -49,14 +56,17 @@ public class GradeController {
                     result.add(grade);
                 }
             }
-            return JsonTools.toResult(0, "成功", result.size(), result);
+            PageInfo<Grade> pageInfo = new PageInfo<>(result);
+            return JsonTools.toResult(0, "成功", pageInfo.getTotal(), pageInfo);
         }
     }
 
     @GetMapping("/getGradeAssessmentByStudentId")
     public Map<String, Object> getGradeAssessmentByStudentId(
             @RequestParam(defaultValue = "") String studentId,
-            @RequestParam(defaultValue = "") String key
+            @RequestParam(defaultValue = "") String key,
+            @RequestParam(defaultValue = Page.PAGE_INDEX) String page,
+            @RequestParam(defaultValue = Page.PAGE_SIZE) String limit
     ) {
         if (key.isEmpty()) {
             if (studentId.isEmpty()) {
@@ -67,7 +77,8 @@ public class GradeController {
             List<GradeAssessment> gradeAssessmentList = new ArrayList<>();
             GradeAssessment gradeAssessment = getGradeVO(gradeService.getGradeByStudentId(Integer.valueOf(studentId)).get(0));
             gradeAssessmentList.add(gradeAssessment);
-            return JsonTools.toResult(0, "成功", 1, gradeAssessmentList);
+            PageInfo<GradeAssessment> pageInfo = new PageInfo<>(gradeAssessmentList);
+            return JsonTools.toResult(0, "成功", 1, pageInfo);
         } else {
             if (studentId.isEmpty()) {
                 return JsonTools.toResult(1, "参数有误", 0, null);
@@ -75,7 +86,8 @@ public class GradeController {
             List<GradeAssessment> gradeAssessmentList = new ArrayList<>();
             GradeAssessment gradeAssessment = getGradeVO(gradeService.getGradeByStudentId(Integer.valueOf(studentId)).get(0));
             gradeAssessmentList.add(gradeAssessment);
-            return JsonTools.toResult(0, "成功", 1, gradeAssessmentList);
+            PageInfo<GradeAssessment> pageInfo = new PageInfo<>(gradeAssessmentList);
+            return JsonTools.toResult(0, "成功", 1, pageInfo);
         }
     }
 

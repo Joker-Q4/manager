@@ -1,6 +1,8 @@
 package com.sau.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.sau.entity.*;
 import com.sau.entity.vo.TeacherVO;
 import com.sau.global.Global;
@@ -40,20 +42,27 @@ public class TeacherController {
     @GetMapping("/queryTeachers")
     public Map<String, Object> queryTeachers(
             @RequestParam(defaultValue = "") String id,
-            @RequestParam(defaultValue = "") String key
+            @RequestParam(defaultValue = "") String key,
+            @RequestParam(defaultValue = Page.PAGE_INDEX) String page,
+            @RequestParam(defaultValue = Page.PAGE_SIZE) String limit
     ){
+        PageHelper.startPage(Integer.parseInt(page), Integer.parseInt(limit));
         if(key.isEmpty()){
             if(id.isEmpty()){
                 final List<Teacher> teachers = teacherService.getAllTeachers();
                 for(Teacher teacher: teachers){
                     setVO(teacher);
                 }
-                return JsonTools.toResult(0, "success", teachers.size(), teachers);
+                PageInfo<Teacher> pageInfo = new PageInfo<>(teachers);
+                return JsonTools.toResult(0, "成功", pageInfo.getTotal(), pageInfo);
             }
             Teacher teacher = teacherService.getTeacherById(Integer.valueOf(id));
             if(teacher != null){
                 setVO(teacher);
-                return JsonTools.toResult(0, "success", 1, teacher);
+                PageInfo<Teacher> pageInfo = new PageInfo<>(new ArrayList<Teacher>(){{
+                    add(teacher);
+                }});
+                return JsonTools.toResult(0, "success", 1, pageInfo);
             }else
                 return JsonTools.toResult(0, "success", 0, null);
         }else{
@@ -68,7 +77,8 @@ public class TeacherController {
                     result.add(teacher);
                 }
             }
-            return JsonTools.toResult(0, "success", result.size(), result);
+            PageInfo<Teacher> pageInfo = new PageInfo<>(result);
+            return JsonTools.toResult(0, "success", result.size(), pageInfo);
         }
     }
 

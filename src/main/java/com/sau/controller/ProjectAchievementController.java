@@ -1,7 +1,9 @@
 package com.sau.controller;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.sau.entity.Page;
 import com.sau.entity.ProjectAchievement;
-import com.sau.entity.Thesis;
 import com.sau.global.Global;
 import com.sau.global.JsonTools;
 import com.sau.service.ProjectAchievementService;
@@ -26,14 +28,18 @@ public class ProjectAchievementController {
     @GetMapping("/getAchievementByStudentId")
     public Map<String, Object> getAchievementByStudentId(
             @RequestParam(defaultValue = "") String studentId,
-            @RequestParam(defaultValue = "") String key
+            @RequestParam(defaultValue = "") String key,
+            @RequestParam(defaultValue = Page.PAGE_INDEX) String page,
+            @RequestParam(defaultValue = Page.PAGE_SIZE) String limit
     ) {
+        PageHelper.startPage(Integer.parseInt(page), Integer.parseInt(limit));
         if(key.isEmpty()){
             if(studentId.isEmpty()){
                 return JsonTools.toResult(1, "参数有误", 0, null);
             }
             final List<ProjectAchievement> list = service.findAchievementByStudentId(Integer.valueOf(studentId));
-            return JsonTools.toResult(0, "成功", list.size(), list);
+            PageInfo<ProjectAchievement> pageInfo = new PageInfo<>(list);
+            return JsonTools.toResult(0, "成功", pageInfo.getTotal(), pageInfo);
         }else{
             if(studentId.isEmpty()){
                 return JsonTools.toResult(1, "参数有误", 0, null);
@@ -47,21 +53,26 @@ public class ProjectAchievementController {
                     result.add(projectAchievement);
                 }
             }
-            return JsonTools.toResult(0, "成功", result.size(), result);
+            PageInfo<ProjectAchievement> pageInfo = new PageInfo<>(result);
+            return JsonTools.toResult(0, "成功", pageInfo.getTotal(), pageInfo);
         }
     }
 
     @GetMapping("/getAchievementByTeacherId")
     public Map<String, Object> getAchievementByTeacherId(
             @RequestParam(defaultValue = "") String teacherId,
-            @RequestParam(defaultValue = "") String key
+            @RequestParam(defaultValue = "") String key,
+            @RequestParam(defaultValue = Page.PAGE_INDEX) String page,
+            @RequestParam(defaultValue = Page.PAGE_SIZE) String limit
     ){
+        PageHelper.startPage(Integer.parseInt(page), Integer.parseInt(limit));
         if(key.isEmpty()){
             if(teacherId.isEmpty()){
                 return JsonTools.toResult(1, "参数有误", 0, null);
             }
             final List<ProjectAchievement> list = service.findAchievementByTeacherId(Integer.valueOf(teacherId));
-            return JsonTools.toResult(0, "成功", list.size(), list);
+            PageInfo<ProjectAchievement> pageInfo = new PageInfo<>(list);
+            return JsonTools.toResult(0, "成功", pageInfo.getTotal(), pageInfo);
         }else{
             if(teacherId.isEmpty()){
                 return JsonTools.toResult(1, "参数有误", 0, null);
@@ -75,7 +86,8 @@ public class ProjectAchievementController {
                     result.add(projectAchievement);
                 }
             }
-            return JsonTools.toResult(0, "成功", result.size(), result);
+            PageInfo<ProjectAchievement> pageInfo = new PageInfo<>(result);
+            return JsonTools.toResult(0, "成功", pageInfo.getTotal(), pageInfo);
         }
     }
 

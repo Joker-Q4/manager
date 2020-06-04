@@ -1,5 +1,8 @@
 package com.sau.controller;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.sau.entity.Page;
 import com.sau.entity.ScienceTechnologyAchievementAward;
 import com.sau.global.Global;
 import com.sau.global.JsonTools;
@@ -25,14 +28,18 @@ public class STAwardController {
     @GetMapping("/getSTAwardByStudentId")
     public Map<String, Object> getSTAwardByStudentId(
             @RequestParam(defaultValue = "") String studentId,
-            @RequestParam(defaultValue = "") String key
+            @RequestParam(defaultValue = "") String key,
+            @RequestParam(defaultValue = Page.PAGE_INDEX) String page,
+            @RequestParam(defaultValue = Page.PAGE_SIZE) String limit
     ){
+        PageHelper.startPage(Integer.parseInt(page), Integer.parseInt(limit));
         if(key.isEmpty()){
             if(studentId.isEmpty()){
                 return JsonTools.toResult(1, "参数有误", 0, null);
             }
             final List<ScienceTechnologyAchievementAward> list = stAwardService.findSTAwardByStudentId(Integer.valueOf(studentId));
-            return JsonTools.toResult(0, "成功", list.size(), list);
+            PageInfo<ScienceTechnologyAchievementAward> pageInfo = new PageInfo<>(list);
+            return JsonTools.toResult(0, "成功", pageInfo.getTotal(), pageInfo);
         }else {
             if(studentId.isEmpty()){
                 return JsonTools.toResult(1, "参数有误", 0, null);
@@ -46,21 +53,26 @@ public class STAwardController {
                     result.add(scienceTechnologyAchievementAward);
                 }
             }
-            return JsonTools.toResult(0, "成功", result.size(), result);
+            PageInfo<ScienceTechnologyAchievementAward> pageInfo = new PageInfo<>(result);
+            return JsonTools.toResult(0, "成功", pageInfo.getTotal(), pageInfo);
         }
     }
 
     @GetMapping("/getSTAwardByTeacherId")
     public Map<String, Object> getSTAwardByTeacherId(
             @RequestParam(defaultValue = "") String teacherId,
-            @RequestParam(defaultValue = "") String key
+            @RequestParam(defaultValue = "") String key,
+            @RequestParam(defaultValue = Page.PAGE_INDEX) String page,
+            @RequestParam(defaultValue = Page.PAGE_SIZE) String limit
     ){
+        PageHelper.startPage(Integer.parseInt(page), Integer.parseInt(limit));
         if(key.isEmpty()){
             if(teacherId.isEmpty()){
                 return JsonTools.toResult(1, "参数有误", 0, null);
             }
             final List<ScienceTechnologyAchievementAward> list = stAwardService.findSTAwardByTeacherId(Integer.valueOf(teacherId));
-            return JsonTools.toResult(0, "成功", list.size(), list);
+            PageInfo<ScienceTechnologyAchievementAward> pageInfo = new PageInfo<>(list);
+            return JsonTools.toResult(0, "成功", pageInfo.getTotal(), pageInfo);
         }else {
             if(teacherId.isEmpty()){
                 return JsonTools.toResult(1, "参数有误", 0, null);
@@ -74,7 +86,8 @@ public class STAwardController {
                     result.add(scienceTechnologyAchievementAward);
                 }
             }
-            return JsonTools.toResult(0, "成功", result.size(), result);
+            PageInfo<ScienceTechnologyAchievementAward> pageInfo = new PageInfo<>(result);
+            return JsonTools.toResult(0, "成功", pageInfo.getTotal(), pageInfo);
         }
     }
 

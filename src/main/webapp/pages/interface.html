@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../lib/layui-v2.5.5/css/layui.css" media="all">
+    <link rel="stylesheet" href="../css/public.css" media="all">
+</head>
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+
+        <table class="layui-hide" id="InterfaceTable" lay-filter="InterfaceTableFilter"></table>
+        <div id="page"></div>
+
+    </div>
+</div>
+<script src="../lib/layui-v2.5.5/layui.js" charset="utf-8"></script>
+<script src="../lib/jquery-3.4.1/jquery-3.4.1.min.js" charset="utf-8"></script>
+<script src="../js/common.js" charset="utf-8"></script>
+<script>
+
+    var key = "";
+    var global_table;
+    layui.use(['form', 'table', 'element', 'laypage'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            laypage = layui.laypage,
+            table = layui.table;
+
+        global_table = table;
+
+        var url = '/admin/getAllUrl';
+
+        table.render({
+            elem: '#InterfaceTable',
+            url: url,
+            cols: [[
+                {field: 'id', width: 80, title: 'ID', sort: true},
+                {field: 'requestUrl', width: 220, title: 'requestUrl', edit: false
+                    ,templet: function(data){
+                        if(key !== "" && data.requestUrl.indexOf(key) !== -1 )
+                            return '<span style="color: deepskyblue; ">'+data.requestUrl+'</span>';
+                        else
+                            return data.requestUrl;
+                    }},
+                {field: 'controllerName', width: 220, title: 'controllerName', edit: false
+                    ,templet: function(data){
+                        if(key !== "" && data.controllerName.indexOf(key) !== -1 )
+                            return '<span style="color: deepskyblue; ">'+data.controllerName+'</span>';
+                        else
+                            return data.controllerName;
+                    }},
+                {field: 'requestType', width: 120, title: 'requestType', edit: false
+                    ,templet: function(data){
+                        if(key !== "" && data.requestType.indexOf(key) !== -1 )
+                            return '<span style="color: deepskyblue; ">'+data.requestType+'</span>';
+                        else
+                            return data.requestType;
+                    }},
+                {field: 'requestMethodName', width: 220, title: 'requestMethodName', edit: false
+                    ,templet: function(data){
+                        if(key !== "" && data.requestMethodName.indexOf(key) !== -1 )
+                            return '<span style="color: deepskyblue; ">'+data.requestMethodName+'</span>';
+                        else
+                            return data.requestMethodName;
+                    }},
+                {field: 'methodParamTypes', minwidth: 200, title: 'methodParamTypes', edit: false
+                    ,templet: function(data){
+                        if(key !== "" && data.methodParamTypes.indexOf(key) !== -1 )
+                            return '<span style="color: deepskyblue; ">'+data.methodParamTypes+'</span>';
+                        else
+                            return data.methodParamTypes;
+                    }}
+            ]],
+            limits: [10, 15, 20, 25, 50, 100],
+            limit: 10,
+            page: true
+        });
+
+        // 监听搜索操作
+        form.on('submit(data-search-btn)', function (data) {
+            var url = '/admin/getAllUrl';
+            //执行搜索重载
+            table.reload('InterfaceTable', {
+                url: url,
+                page: {
+                    curr: 1
+                }
+            }, 'data');
+
+            return false;
+        });
+    });
+
+    function reloadTable() {
+        global_table.reload('InterfaceTable', {
+            page: {
+                curr: 1
+            }
+        }, 'data');
+    }
+
+</script>
+</body>
+</html>

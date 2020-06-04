@@ -1,7 +1,10 @@
 package com.sau.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.sau.entity.BusinessPractice;
+import com.sau.entity.Page;
 import com.sau.global.Global;
 import com.sau.global.GlobalKey;
 import com.sau.global.JsonTools;
@@ -27,14 +30,18 @@ public class BusinessPracticeController {
     @GetMapping("/getPracticeByStudentId")
     public Map<String, Object> getPracticeByStudentId(
             @RequestParam(defaultValue = "") String studentId,
-            @RequestParam(defaultValue = "") String key
+            @RequestParam(defaultValue = "") String key,
+            @RequestParam(defaultValue = Page.PAGE_INDEX) String page,
+            @RequestParam(defaultValue = Page.PAGE_SIZE) String limit
     ){
+        PageHelper.startPage(Integer.parseInt(page), Integer.parseInt(limit));
         if(key.isEmpty()){
             if(studentId.isEmpty()){
                 return JsonTools.toResult(1, "参数有误", 0, null);
             }
             final List<BusinessPractice> list = businessPracticeService.getPracticeByStudentId(Integer.valueOf(studentId));
-            return JsonTools.toResult(0, "success", list.size(), list);
+            PageInfo<BusinessPractice> pageInfo = new PageInfo<>(list);
+            return JsonTools.toResult(0, "成功", pageInfo.getTotal(), pageInfo);
         }else {
             if(studentId.isEmpty()){
                 return JsonTools.toResult(1, "参数有误", 0, null);
@@ -48,7 +55,8 @@ public class BusinessPracticeController {
                     result.add(businessPractice);
                 }
             }
-            return JsonTools.toResult(0, "成功", result.size(), result);
+            PageInfo<BusinessPractice> pageInfo = new PageInfo<>(result);
+            return JsonTools.toResult(0, "成功", pageInfo.getTotal(), pageInfo);
         }
     }
 

@@ -1,7 +1,9 @@
 package com.sau.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.sau.entity.Grade;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.sau.entity.Page;
 import com.sau.entity.Prize;
 import com.sau.global.Global;
 import com.sau.global.GlobalKey;
@@ -28,14 +30,18 @@ public class PrizeController {
     @GetMapping("/getPrizeByStudentId")
     public Map<String, Object> getPrizeByStudentId(
             @RequestParam(defaultValue = "") String studentId,
-            @RequestParam(defaultValue = "") String key
+            @RequestParam(defaultValue = "") String key,
+            @RequestParam(defaultValue = Page.PAGE_INDEX) String page,
+            @RequestParam(defaultValue = Page.PAGE_SIZE) String limit
     ){
+        PageHelper.startPage(Integer.parseInt(page), Integer.parseInt(limit));
         if(key.isEmpty()){
             if(studentId.isEmpty()){
                 return JsonTools.toResult(1, "参数有误", 0, null);
             }
             final List<Prize> list = prizeService.getPrizeByStudentId(Integer.valueOf(studentId));
-            return JsonTools.toResult(0, "success", list.size(), list);
+            PageInfo<Prize> pageInfo = new PageInfo<>(list);
+            return JsonTools.toResult(0, "成功", pageInfo.getTotal(), pageInfo);
         }else {
             if(studentId.isEmpty()){
                 return JsonTools.toResult(1, "参数有误", 0, null);
@@ -49,7 +55,8 @@ public class PrizeController {
                     result.add(prize);
                 }
             }
-            return JsonTools.toResult(0, "成功", result.size(), result);
+            PageInfo<Prize> pageInfo = new PageInfo<>(result);
+            return JsonTools.toResult(0, "成功", pageInfo.getTotal(), pageInfo);
         }
     }
 
