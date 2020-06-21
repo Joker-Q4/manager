@@ -16,7 +16,6 @@ public class Configurer implements WebMvcConfigurer {
         registration.addPathPatterns("/**");                      //所有路径都被拦截
         registration.excludePathPatterns(                         //添加不拦截路径
               //  "/**"//,
-                "/**/register.html",            //登录
                 "/**/menu",            //登录
                 "/**/*.js",              //js静态资源
                 "/**/*.css",             //css静态资源
@@ -30,7 +29,6 @@ public class Configurer implements WebMvcConfigurer {
                 "/**/*.svg",
                 "/**/*.ttf",
                 "/**/layuimini",
-                "/register.html",            //登录
                 "/menu",            //登录
                 "/*.js",              //js静态资源
                 "/*.css",             //css静态资源

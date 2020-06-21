@@ -38,7 +38,8 @@ public class AdminLoginController {
     public Map<String, Object> login(
             HttpServletRequest httpServletRequest,
             @RequestParam(defaultValue = "") String account,
-            @RequestParam(defaultValue = "") String password){
+            @RequestParam(defaultValue = "") String password
+    ){
         if(account.isEmpty() || password.isEmpty())
             return JsonTools.toResult(false, "用户名或密码不能为空");
         Admin admin = adminService.getAdmin(account);
@@ -65,9 +66,9 @@ public class AdminLoginController {
         if(adminService.addAdmin(admin)){
             HttpSession session = httpServletRequest.getSession();
             session.setAttribute("admin", admin);
-            return JsonTools.toResult(true, "添加成功");
+            return JsonTools.toResult(true, "注册成功");
         }
-        return JsonTools.toResult(false, "添加失败");
+        return JsonTools.toResult(false, "注册失败");
     }
 
 
